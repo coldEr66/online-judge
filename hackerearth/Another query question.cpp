@@ -54,7 +54,50 @@ const ll MAXn=1e5+5;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+ll d[MAXn];
+ll bit[MAXn];
+
+ll lowbit(ll x){
+  return x&(-x);
+}
+
+void ins(ll x){
+  while(x>0){
+    bit[x]++;
+    x-=lowbit(x);
+  }
+}
+
+ll qr(ll x){
+  ll rt=0;
+  while(x<MAXn){
+    rt+=bit[x];
+    x+=lowbit(x);
+  }
+  return rt;
+}
+
 int main(){
   IOS();
-  
+  ll n;
+  cin>>n;
+  REP1(i,n) cin>>d[i];
+  ll q;
+  cin>>q;
+  while(q--){
+    ll a,b;
+    cin>>a>>b;
+    if(a==1) ins(b);
+    else{
+      ll l=1,r=n+1;
+      while(l!=r-1){
+        ll mid=(l+r)/2;
+        if(d[mid]-qr(mid)>=b) r=mid;
+        else l=mid;
+        debug("OK");
+      }
+      if(d[r]-qr(r)==b) cout<<"yes"<<endl;
+      else cout<<"no"<<endl;
+    }
+  }
 }
