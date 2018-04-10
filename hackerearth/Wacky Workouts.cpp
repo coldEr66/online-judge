@@ -5,7 +5,6 @@ typedef double lf;
 typedef pair<ll,ll> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
 #define REP1(i,n) for(ll i=1;i<=n;i++)
-#define FOR(i,j,n,m) for(int i=j;i<n;i+=m)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
@@ -51,11 +50,44 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__log(MAXn)+2;
+const ll MAXn=1e5+5;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+struct matrix{
+  ll m[2][2];
+}ans,base;
+
+matrix mul(matrix a,matrix b){
+  matrix tmp;
+  REP(i,2)REP(j,2){
+    tmp.m[i][j]=0;
+    REP(k,2) tmp.m[i][j]=(tmp.m[i][j]+a.m[i][k]*b.m[k][j])%MOD;
+  }
+  return tmp;
+}
+
+ll fpow(ll n){
+  base.m[0][0]=base.m[0][1]=base.m[1][0]=1;
+  base.m[1][1]=0;
+  ans.m[0][0]=ans.m[1][1]=1;
+  ans.m[0][1]=ans.m[1][0]=0;
+  while(n){
+    if(n&1) ans=mul(ans,base);
+    base=mul(base,base);
+    n>>=1;
+  }
+  return ans.m[0][0];
+}
+
 int main(){
   IOS();
-
+  ll t;
+  cin>>t;
+  while(t--){
+    ll n;
+    cin>>n;
+    ll x=fpow(n+1);
+    cout<<x<<endl;
+  }
 }

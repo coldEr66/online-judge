@@ -51,11 +51,47 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__log(MAXn)+2;
+const ll MAXn=1e7+5;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+queue<int> q;
+char s[MAXn];
+int apt[27];
+
 int main(){
   IOS();
-
+  int n;
+  while(cin>>n && n){
+    cin>>s;
+    while(SZ(q)) q.pop();
+    RST(apt,0);
+    if(n<26){
+      cout<<"not found"<<endl;
+      continue;
+    }
+    int l=0,r=n+1;
+    int cnt=0;
+    bool fg=false;
+    REP(i,n){
+      if(apt[s[i]-'a']==0) cnt++;
+      q.push(i);
+      apt[s[i]-'a']++;
+      if(cnt!=26) continue;
+      while(SZ(q) && apt[s[q.front()]-'a']>1){
+        apt[s[q.front()]-'a']--;
+        q.pop();
+      }
+      if(SZ(q) && i-q.front()<r-l){
+        l=q.front();
+        r=i;
+        fg=true;
+      }
+    }
+    if(fg){
+      FOR(i,l,r+1,1) cout<<s[i];
+      cout<<endl;
+    }
+    else cout<<"not found"<<endl;
+  }
 }

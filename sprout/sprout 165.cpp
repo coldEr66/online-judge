@@ -69,7 +69,7 @@ void init(){
 }
 
 void build(){
-	
+
 }
 priority_queue<ll,vector<ll>,greater<ll>> q;
 void bfs(){
@@ -116,4 +116,3 @@ int main(){
 		sol();
 	}
 }
-
