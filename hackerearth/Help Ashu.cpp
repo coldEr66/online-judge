@@ -51,11 +51,71 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e5+5;
+const ll MAXlg=(ll)__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
-
+ll d[MAXn];
+ll bit[MAXn];
+ll n;
+ll lowbit(ll x){
+  return x&(-x);
+}
+void init(){
+  REP1(i,n){
+    if(d[i]&1) continue;
+    ll tmp=i;
+    while(tmp<=n){
+      bit[tmp]++;
+      tmp+=lowbit(tmp);
+    }
+  }
+}
+void ins(ll a,ll b){
+  if(d[a]==b%2 && d[a]!=-1) return;
+  b%=2;
+  d[a]=b;
+  while(a<=n){
+    if(b&1) bit[a]--;
+    else bit[a]++;
+    a+=lowbit(a);
+  }
+}
+ll qr(ll x){
+  ll rt=0;
+  while(x>0){
+    rt+=bit[x];
+    x-=lowbit(x);
+  }
+  return rt;
+}
 int main(){
   IOS();
-  
+  cin>>n;
+  RST(d,-1);
+  REP1(i,n){
+    ll x;
+    cin>>x;
+    if(x&1) d[i]=1;
+    else d[i]=0;
+  }
+  pary(d+1,d+n+1);
+  init();
+  ll q;
+  cin>>q;
+  while(q--){
+    ll x,l,r;
+    cin>>x>>l>>r;
+    if(x==0) ins(l,r);
+    else if(x==1){
+      ll ans=qr(r)-qr(l-1);
+      cout<<ans<<endl;
+    }
+    else{
+      ll ans=qr(r)-qr(l-1);
+      ll tmp=r-l+1-ans;
+      cout<<tmp<<endl;
+    }
+    pary(d+1,d+n+1);
+  }
 }

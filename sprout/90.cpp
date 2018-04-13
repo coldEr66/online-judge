@@ -55,7 +55,73 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+ll b[MAXn];
+map<ll,ll> cnt,cnt1;
+vector<ll> v,d;
+
 int main(){
   IOS();
-  
+  ll t;
+  cin>>t;
+  while(t--){
+    RST(b,0);
+    cnt.clear();
+    cnt1.clear();
+    v.clear();
+    d.clear();
+    ll n,m;
+    cin>>n>>m;
+    REP(i,n) cin>>b[i];
+    REP(i,m){
+      ll k;
+      cin>>k;
+      v.pb(k);
+      cnt[k]++;
+      cnt1[k]++;
+    }
+    sort(b,b+n,greater<ll>());
+    auto it1=unique(ALL(v));
+    v.resize(distance(v.begin(),it1));
+    sort(ALL(v),greater<ll>());
+    ll idx=0;
+    ll ans=0;
+    for(int i=0;i<n;i++){
+      if(cnt[v[idx]]==0) idx++;
+      while(v[idx]>b[i]) idx++;
+      while(v[idx]<=b[i] && cnt[v[idx]]>0){
+        b[i]-=v[idx];
+        cnt[v[idx]]--;
+        ans++;
+        d.pb(v[idx]);
+      }
+      if(cnt[b[i]]!=0){
+        cnt[b[i]]--;
+        d.pb(b[i]);
+        ans++;
+        b[i]=0;
+      }
+    }
+    if(ans==m){
+      cout<<ans<<endl;
+      continue;
+    }
+    sort(ALL(d),greater<ll>());
+    sort(ALL(v));
+    idx=0;
+    for(auto k:v) cnt1[k]=cnt1[k]-cnt[k];
+    for(auto k:d){
+      ll tmp=0,rt=0;
+      while(tmp+d[idx]<k && cnt1[d[idx]]>0){
+        tmp+=d[idx];
+        cnt1[d[idx]]--;
+        rt++;
+      }
+      if(cnt1[k-tmp]!=0){
+        rt++;
+        cnt1[k-tmp]--;
+      }
+      ans+=(rt-1);
+    }
+    cout<<ans<<endl;
+  }
 }

@@ -55,7 +55,29 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+ll dp[MAXn];
+
 int main(){
   IOS();
-  
+  ll t;
+  cin>>t;
+  while(t--){
+    RST(dp,0);
+    ll n;
+    cin>>n;
+    REP(i,n){
+      ll x;
+      cin>>x;
+      dp[i]+=x;
+      if(i!=0) dp[i]+=dp[i-1];
+    }
+    ll q;
+    cin>>q;
+    while(q--){
+      ll l,r;
+      cin>>l>>r;
+      l--,r--;
+      cout<<dp[r]-dp[l-1]<<endl;
+    }
+  }
 }
