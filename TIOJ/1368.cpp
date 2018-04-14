@@ -55,88 +55,54 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll b[MAXn];
-map<ll,ll> cnt,cnt1;
-vector<ll> v,d,r;
+ll d[MAXn];
+ll sum[MAXn];
+ll l[MAXn],r[MAXn];
+stack<ll> st;
+ll ans,x,y;
+
+bool chk(ll a,ll b,ll c){
+  if(a!=ans) return ans<a;
+  if(b!=x) return b<x;
+  return c<y;
+}
 
 int main(){
   IOS();
-  ll t;
-  cin>>t;
-  while(t--){
-    RST(b,0);
-    cnt.clear();
-    cnt1.clear();
-    v.clear();
-    d.clear();
-    r.clear();
-    ll n,m;
-    cin>>n>>m;
-    REP(i,n) cin>>b[i];
-    REP(i,m){
-      ll k;
-      cin>>k;
-      v.pb(k);
+  ll n;
+  while(cin>>n){
+    ans=0,x=INF,y=INF;
+    while(SZ(st)) st.pop();
+    REP1(i,n){
+      cin>>d[i];
+      sum[i]=sum[i-1]+d[i];
+      l[i]=1;
+      r[i]=n;
     }
-    sort(ALL(v),greater<ll>());
-    debug(v);
-    ll idx=0;
-    ll ans=0;
-    REP(i,n){
-      idx=0;
-      while(v[idx]>b[i] || cnt[v[idx]]==0) idx++;
-      while(v[idx]<=b[i] && cnt[v[idx]]>0){
-        debug(v[idx],idx,b[i]);
-        b[i]-=v[idx];
-        cnt[v[idx]]--;
-        if(cnt[v[idx]]==0) idx++;
-        ans++;
-        d.pb(v[idx]);
-        debug(cnt[v[idx]]);
+    pary(sum,sum+n);
+    REP1(i,n){
+      while(SZ(st) && d[st.top()]>=d[i]) st.pop();
+      if(SZ(st)) l[i]=st.top()+1;
+      st.push(i);
+    }
+    while(SZ(st)) st.pop();
+    for(int i=n;i>=1;i--){
+      while(SZ(st) && d[st.top()]>=d[i]) st.pop();
+      if(SZ(st)) r[i]=st.top()-1;
+      st.push(i);
+    }
+    pary(l+1,l+n+1);
+    pary(r+1,r+n+1);
+    REP1(i,n){
+      ll tmp=d[i]*(sum[r[i]]-sum[l[i]-1]);
+      debug(tmp,i,d[i],sum[r[i]],sum[l[i]-1]);
+      if(chk(tmp,l[i],r[i])){
+        ans=tmp;
+        x=l[i];
+        y=r[i];
       }
-      if(cnt[b[i]]!=0){
-        cnt[b[i]]--;
-        d.pb(b[i]);
-        ans++;
-        b[i]=0;
-      }
-    }
-    if(ans==m){
-      cout<<ans<<endl;
-      continue;
-    }
-    debug(d);
-    debug(ans);
-    sort(ALL(d),greater<ll>());
-    sort(ALL(v));
-    debug(v);
-    ll x=v[0];
-    REP(i,SZ(v)){
-      ll k=v[i];
-      if(i!=0 && x==k) continue;
-      cnt1[k]=cnt1[k]-cnt[k];
-      x=k;
-    }
-    for(auto it:cnt){
-      REP(i,it.S) r.pb(it.F);
-    }
-    sort(ALL(r));
-    debug(r);
-    idx=0;
-    for(auto k:d){
-      ll tmp=0,rt=0;
-      while(tmp+r[idx]<=k && cnt[r[idx]]>0){
-        tmp+=r[idx];
-        cnt[r[idx]]--;
-        rt++;
-      }
-      if(cnt[k-tmp]!=0){
-        rt++;
-        cnt[k-tmp]--;
-      }
-      if(rt!=0) ans+=(rt-1);
-      idx++;
     }
     cout<<ans<<endl;
+    cout<<x<<' '<<y<<endl;
   }
 }

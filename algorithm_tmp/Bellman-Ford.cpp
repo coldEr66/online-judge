@@ -55,88 +55,43 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll b[MAXn];
-map<ll,ll> cnt,cnt1;
-vector<ll> v,d,r;
+struct E{
+  ll a,b,w;
+};
+vector<E> v;
+ll dis[MAXn];
+ll n,m;
+
+bool NEGATIVE_CYCLE(){
+  REP(i,n-1){
+    REP(j,m){
+      ll cur=v[j].a,to=v[j].b,w=v[j].w;
+      if(dis[to]>dis[cur]+w) return true;
+    }
+  }
+  return false;
+}
 
 int main(){
   IOS();
-  ll t;
-  cin>>t;
-  while(t--){
-    RST(b,0);
-    cnt.clear();
-    cnt1.clear();
-    v.clear();
-    d.clear();
-    r.clear();
-    ll n,m;
-    cin>>n>>m;
-    REP(i,n) cin>>b[i];
-    REP(i,m){
-      ll k;
-      cin>>k;
-      v.pb(k);
-    }
-    sort(ALL(v),greater<ll>());
-    debug(v);
-    ll idx=0;
-    ll ans=0;
-    REP(i,n){
-      idx=0;
-      while(v[idx]>b[i] || cnt[v[idx]]==0) idx++;
-      while(v[idx]<=b[i] && cnt[v[idx]]>0){
-        debug(v[idx],idx,b[i]);
-        b[i]-=v[idx];
-        cnt[v[idx]]--;
-        if(cnt[v[idx]]==0) idx++;
-        ans++;
-        d.pb(v[idx]);
-        debug(cnt[v[idx]]);
-      }
-      if(cnt[b[i]]!=0){
-        cnt[b[i]]--;
-        d.pb(b[i]);
-        ans++;
-        b[i]=0;
-      }
-    }
-    if(ans==m){
-      cout<<ans<<endl;
-      continue;
-    }
-    debug(d);
-    debug(ans);
-    sort(ALL(d),greater<ll>());
-    sort(ALL(v));
-    debug(v);
-    ll x=v[0];
-    REP(i,SZ(v)){
-      ll k=v[i];
-      if(i!=0 && x==k) continue;
-      cnt1[k]=cnt1[k]-cnt[k];
-      x=k;
-    }
-    for(auto it:cnt){
-      REP(i,it.S) r.pb(it.F);
-    }
-    sort(ALL(r));
-    debug(r);
-    idx=0;
-    for(auto k:d){
-      ll tmp=0,rt=0;
-      while(tmp+r[idx]<=k && cnt[r[idx]]>0){
-        tmp+=r[idx];
-        cnt[r[idx]]--;
-        rt++;
-      }
-      if(cnt[k-tmp]!=0){
-        rt++;
-        cnt[k-tmp]--;
-      }
-      if(rt!=0) ans+=(rt-1);
-      idx++;
-    }
-    cout<<ans<<endl;
+  cin>>n>>m;
+  REP(i,MAXn) dis[i]=INF;
+  REP(i,m){
+    ll a,b,t;
+    cin>>a>>b>>t;
+    a--,b--;
+    v.pb((E){a,b,t});
   }
+  ll st=0; // 起點
+  dis[st]=0;
+  REP(i,n-1){
+    REP(j,m){
+      ll cur=v[j].a,to=v[j].b,w=v[j].w;
+      if(dis[to]>dis[cur]+w) dis[to]=dis[cur]+w;
+      debug(dis[to],to);
+    }
+  }
+  if(NEGATIVE_CYCLE()) cout<<"NEGATIVE_CYCLE"<<endl;
+  ll end=0; // 終點
+  cout<<dis[end]<<endl;
 }
