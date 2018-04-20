@@ -51,74 +51,42 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1030,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll d[MAXn],u[MAXn];
-vector<ll> v;
-map<ll,ll> ct;
-ll n,m;
-
-bool sol(ll x){ //true->ok,false->not
-  map<ll,ll> tmp,tmp1=ct;
-  debug("sol");
-  REP(i,x) tmp[d[i]]++;
-  REP(i,SZ(v)-1){
-    debug("hi");
-    if(i==SZ(v)-2) return tmp1[v[i]]<tmp[v[i]] ?false:true;
-    else if(tmp1[v[i]]<tmp[v[i]]) return false;
-    else{
-      ll tp=v[i]/v[i+1];
-      tmp1[v[i]]-=tmp[v[i]];
-      tmp1[v[i+1]]+=tmp1[v[i]]*tp;
-    }
-  }
-  return true;
+int d[MAXn][MAXn];
+void fil(int x,int y,int val){
+  d[x][y]=val;
 }
-
-int main(){
-  IOS();
-  ll t;
-  cin>>t;
-  while(t--){
-    v.clear();
-    ct.clear();
-    RST(u,0);
-    RST(d,0);
-    cin>>n>>m;
-    REP(i,n) cin>>u[i];
-    REP(i,m) cin>>d[i];
-    sort(d,d+m);
-    sort(u,u+n,greater<ll>());
-    v.pb(d[0]);
-    v.pb(0);
-    ll y=d[0];
-    if(y!=1) v.pb(1);
-    sort(ALL(v));
-    REP(i,m){
-      if(d[i]==y) continue;
-      v.pb(d[i]);
-      y=d[i];
+void solve(int n,int x=0,int y=0,int l=1,int r=-1,int ok=1,int tp=0){
+  if(ok) r=2*n-1;
+  debug(r);
+  if(n==2){
+    fil(x,y,l);
+    fil(x+1,y+1,l);
+    fil(x,y+1,r);
+    if(r-l==2) fil(x+1,y,l+1);
+    else fil(x+1,y,r);
+    if(ok){
+      REP(i,n)REP(j,n) Report(d[i][j]);
     }
-    sort(ALL(v),greater<ll>());
-    debug(v);
-    REP(i,n){
-      ll cur=u[i];
-      ll idx=0;
-      while(cur>0){
-        while(cur<v[idx] && idx<SZ(v)) idx++;
-        ct[v[idx]]+=cur/v[idx];
-        cur%=v[idx];
-      }
-    }
-    debug("ok");
-    ll l=0,r=m+1;
-    while(l!=r-1){
-      ll mid=(l+r)/2;
-      if(sol(mid)) l=mid;
-      else r=mid;
-    }
-    cout<<l<<endl;
+    return;
+  }
+  int tmp=n/2;
+  if(!tp){
+    solve(tmp,x,y,l,r/2,0,0);
+    solve(tmp,x,y+tmp,r/2+1,3*r/4,0,1);
+    solve(tmp,x+tmp,y,3*r/4+1,r,0,1);
+    solve(tmp,x+tmp,y+tmp,l,r/2,0,0);
+  }
+  else{
+    solve(tmp,x,y,l,(l+r)/2,0,1);
+    solve(tmp,x,y+tmp,(l+r)/2+1,r,0,1);
+    solve(tmp,x+tmp,y,(l+r)/2+1,r,0,1);
+    solve(tmp,x+tmp,y+tmp,l,(l+r)/2,0,1);
+  }
+  if(ok){
+    REP(i,n)REP(j,n) Report(d[i][j]);
   }
 }
