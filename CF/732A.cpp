@@ -55,64 +55,13 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-MaxHeap<ll> pq;
-ll sum,idx,ans;
-vector<ii> d;
 int main(){
   IOS();
-  ll n,m,r;
-  cin>>n>>m>>r;
-  ll hp=m;
-  REP(i,n){
-    ll a,b;
-    cin>>a>>b;
-    if(a==100) pq.push(b);
-    if(a==0) continue;
-    d.pb({a,b});
-    sum+=b;
+  ll k,r,ct=1;
+  cin>>k>>r;
+  while(1){
+    ll tp=ct*k;
+    if(tp%10==0 || (tp-r)%10==0) return cout<<ct<<endl,0;
+    ct++;
   }
-  n=SZ(d);
-  debug(SZ(pq),sum);
-  sort(ALL(d),greater<ii>());
-  while(d[idx].F==100) idx++;
-  if(!SZ(pq)) return cout<<-1<<endl,0;
-  ll tmp=-r;
-  while(m>0){
-    debug(tmp);
-    m-=tmp;
-    if(m>hp) m=hp;
-    if(m<=0) break;
-    debug(m);
-    debug(idx,tmp);
-    if(idx==n && tmp==sum-r){
-      if(tmp<=0) break;
-      ll tp=m;
-      lf x=ceil((lf)tp/(lf)tmp);
-      debug(ans,x);
-      m=0;
-      ans+=x;
-      break;
-    }
-    else ans++;
-    debug(SZ(pq));
-    if(!SZ(pq)){
-      if(tmp<=0) break;
-      ll tp=floor((lf)d[idx].F*(lf)hp/100.0);
-      debug(tp);
-      tp=m-tp;
-      debug(tp,d[idx].F);
-      ans+=ceil((lf)tp/(lf)tmp);
-      m-=ceil((lf)tp/(lf)tmp)*tmp;
-    }
-    debug((lf)d[idx].F/100.0*(lf)hp,m);
-    while((lf)d[idx].F*(lf)hp/100.0>=m && idx<n) pq.push(d[idx++].S);
-    debug(m,SZ(pq));
-    if(!SZ(pq)) break;
-    ll cur=pq.top();
-    pq.pop();
-    tmp+=cur;
-    debug(tmp);
-  }
-  if(m<=0) cout<<ans<<endl;
-  else cout<<-1<<endl;
 }
