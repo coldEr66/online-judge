@@ -14,6 +14,7 @@ typedef pair<ll,ll> ii;
 #define pb push_back
 #define pob pop_back
 #define MP make_pair
+#define VI vector<int>
 #ifdef cold66
 #define debug(...) do{\
     fprintf(stderr,"%s - %d (%s) = ",__PRETTY_FUNCTION__,__LINE__,#__VA_ARGS__);\
@@ -54,7 +55,40 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+vector<ll> v;
 int main(){
   IOS();
-
+  string s;
+  ll n,a,b;
+  cin>>n>>a>>b;
+  cin>>s;
+  REP(i,n){
+    if(s[i]=='*') continue;
+    ll cnt=0;
+    while(s[i]=='.' && i<n){
+      cnt++;
+      i++;
+    }
+    i--;
+    v.pb(cnt);
+  }
+  debug(v);
+  ll ans=0;
+  REP(i,SZ(v)){
+    ll ta=a,tb=b;
+    ll cur=v[i];
+    ll x=cur/2+cur%2;
+    ll y=cur-x;
+    if(a>=b){
+      a=max(0LL,a-x);
+      b=max(0LL,b-y);
+      ans+=(ta-a+tb-b);
+    }
+    else{
+      a=max(0LL,a-y);
+      b=max(0LL,b-x);
+      ans+=(ta-a+tb-b);
+    }
+  }
+  cout<<ans<<endl;
 }

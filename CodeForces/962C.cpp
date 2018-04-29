@@ -54,7 +54,31 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+ll d[15];
+vector<ll> Vu;
 int main(){
   IOS();
-
+  ll n,idx=0;
+  cin>>n;
+  while(n){
+    d[idx++]=n%10;
+    n/=10;
+  }
+  pary(d,d+11);
+  ll ans=-1;
+  REP1(i,2048){
+    Vu.clear();
+    for(int j=10;j>=0;j--)if(i&(1<<j)) Vu.pb(d[j]);
+    if(Vu[0]==0) continue;
+    //debug(Vu);
+    ll v=0;
+    for(auto it:Vu) v=v*10+it;
+    debug(v);
+    lf tmp=sqrt(v);
+    debug(tmp,(ll)sqrt(v),SZ(Vu));
+    if(tmp==(ll)sqrt(v)) chkmax(ans,(ll)SZ(Vu));
+    debug(ans);
+  }
+  if(ans<0) cout<<-1<<endl;
+  else cout<<idx-ans<<endl;
 }
