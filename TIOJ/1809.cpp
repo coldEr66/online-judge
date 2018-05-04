@@ -2,7 +2,7 @@
 using namespace std;
 typedef long long ll;
 typedef double lf;
-typedef pair<ll,ll> ii;
+typedef pair<int,int> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
 #define REP1(i,n) for(ll i=1;i<=n;i++)
 #define FOR(i,j,n,m) for(int i=j;i<n;i+=m)
@@ -54,7 +54,21 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+set<ii> Sx;
+int a,b;
 int main(){
   IOS();
-  
+  int n,m,q;
+  cin>>n>>m>>q;
+  while(m--){
+    cin>>a>>b;
+    if(a>b) swap(a,b);
+    Sx.insert({a,b});
+  }
+  while(q--){
+    cin>>a>>b;
+    if(a>b) swap(a,b);
+    if(Sx.count({a,b})!=0) cout<<"yes"<<endl;
+    else cout<<"no"<<endl;
+  }
 }

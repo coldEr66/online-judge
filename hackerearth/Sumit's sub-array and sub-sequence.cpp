@@ -54,7 +54,32 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+ll d[MAXn];
+ll dp[MAXn];
+vector<ll> v;
 int main(){
   IOS();
-  
+  ll t;
+  cin>>t;
+  while(t--){
+    RST(d,0);
+    RST(dp,0);
+    v.clear();
+    ll n;
+    cin>>n;
+    REP(i,n) cin>>d[i];
+    ll tmp=0,mx=-INF,ans=-INF,an=0;
+    REP(i,n){
+      if(d[i]>=0) an+=d[i];
+      tmp+=d[i];
+      if(tmp<0) tmp=0;
+      chkmax(mx,d[i]);
+      chkmax(ans,tmp);
+    }
+    debug(ans);
+    if(ans==0) cout<<min(ans,mx)<<' ';
+    else cout<<ans<<' ';
+    if(an==0) cout<<min(an,mx)<<endl;
+    else cout<<an<<endl;
+  }
 }

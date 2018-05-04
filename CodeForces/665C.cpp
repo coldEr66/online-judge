@@ -54,7 +54,49 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+vector<ii> v;
 int main(){
   IOS();
-  
+  string s;
+  cin>>s;
+  ll n=SZ(s);
+  ll idx=0;
+  while(idx<n-1){
+    debug("ok");
+    ll tp=0,tmp=idx;
+    while(s[idx]==s[idx+1] && idx<n-1){
+      tp++;
+      idx++;
+    }
+    if(tp==0){
+      idx++;
+      continue;
+    }
+    v.pb({tmp,tp+1});
+  }
+  debug(v);
+  REP(i,SZ(v)){
+    ii cur=v[i];
+    if(cur.S&1){
+      char tmp;
+      REP(j,26){
+        if((j+'a')!=s[cur.F]){
+          tmp=(j+'a');
+          break;
+        }
+      }
+      for(int j=cur.F+1;j<cur.F+cur.S;j+=2) s[j]=tmp;
+    }
+    else{
+      char tmp;
+      REP(j,26){
+        if(s[cur.F-1]!=j+'a' && (j+'a')!=s[cur.F]){
+          tmp=(j+'a');
+          break;
+        }
+      }
+      for(int j=cur.F;j<cur.F+cur.S;j+=2) s[j]=tmp;
+    }
+  }
+  cout<<s<<endl;
 }
