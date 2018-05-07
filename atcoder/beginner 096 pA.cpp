@@ -13,6 +13,7 @@ typedef pair<ll,ll> ii;
 #define S second
 #define pb push_back
 #define pob pop_back
+#define MP make_pair
 #ifdef cold66
 #define debug(...) do{\
     fprintf(stderr,"%s - %d (%s) = ",__PRETTY_FUNCTION__,__LINE__,#__VA_ARGS__);\
@@ -55,5 +56,10 @@ const ll INF=(ll)1e18;
 
 int main(){
   IOS();
-  
+  ll a,b;
+  cin>>a>>b;
+  ll ans=0;
+  ans+=a;
+  if(b<a) ans--;
+  cout<<ans<<endl;
 }

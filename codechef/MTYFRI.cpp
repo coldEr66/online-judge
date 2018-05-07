@@ -13,6 +13,7 @@ typedef pair<ll,ll> ii;
 #define S second
 #define pb push_back
 #define pob pop_back
+#define MP make_pair
 #ifdef cold66
 #define debug(...) do{\
     fprintf(stderr,"%s - %d (%s) = ",__PRETTY_FUNCTION__,__LINE__,#__VA_ARGS__);\
@@ -53,7 +54,46 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+MaxHeap<ll> M;
+MinHeap<ll> T;
 int main(){
   IOS();
-  
+  ll t;
+  cin>>t;
+  while(t--){
+    while(SZ(M)) M.pop();
+    while(SZ(T)) T.pop();
+    ll n,k;
+    ll tmp1=0,tmp2=0;
+    cin>>n>>k;
+    REP(i,n){
+      ll x;
+      cin>>x;
+      if(i&1){
+        T.push(x);
+        tmp2+=x;
+      }
+      else{
+        M.push(x);
+        tmp1+=x;
+      }
+    }
+    if(n==1){
+      cout<<"NO"<<endl;
+      continue;
+    }
+    while(k && T.top()<M.top()){
+      k--;
+      ll cur1=T.top(),cur2=M.top();
+      T.pop();M.pop();
+      tmp1-=cur2;
+      tmp2-=cur1;
+      tmp1+=cur1;
+      tmp2+=cur2;
+      T.push(cur2);
+      M.push(cur1);
+    }
+    if(tmp2>tmp1) cout<<"YES"<<endl;
+    else cout<<"NO"<<endl;
+  }
 }

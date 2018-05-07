@@ -55,5 +55,5 @@ const ll INF=(ll)1e18;
 
 int main(){
   IOS();
-  
+
 }

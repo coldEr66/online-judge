@@ -13,6 +13,7 @@ typedef pair<ll,ll> ii;
 #define S second
 #define pb push_back
 #define pob pop_back
+#define MP make_pair
 #ifdef cold66
 #define debug(...) do{\
     fprintf(stderr,"%s - %d (%s) = ",__PRETTY_FUNCTION__,__LINE__,#__VA_ARGS__);\
@@ -49,11 +50,34 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=55,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+char d[MAXn][MAXn];
+ll n,m;
+ll dx[]={1,0,0,-1};
+ll dy[]={0,1,-1,0};
+bool chk(ll x,ll y){
+  if(x<0 || x>=n || y<0 || y>=m) return true;
+  else return false;
+}
 int main(){
   IOS();
-  
+  cin>>n>>m;
+  bool fg=true;
+  REP(i,n)REP(j,m) cin>>d[i][j];
+  REP(i,n)REP(j,m){
+    if(d[i][j]=='.')  continue;
+    else{
+      bool ok=false;
+      REP(k,4){
+        if(chk(i+dx[k],j+dy[k])) continue;
+        if(d[i+dx[k]][j+dy[k]]=='#') ok=true;
+      }
+      if(!ok) fg=false;
+    }
+  }
+  if(fg) cout<<"Yes"<<endl;
+  else cout<<"No"<<endl;
 }

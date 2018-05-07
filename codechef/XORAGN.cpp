@@ -13,6 +13,7 @@ typedef pair<ll,ll> ii;
 #define S second
 #define pb push_back
 #define pob pop_back
+#define MP make_pair
 #ifdef cold66
 #define debug(...) do{\
     fprintf(stderr,"%s - %d (%s) = ",__PRETTY_FUNCTION__,__LINE__,#__VA_ARGS__);\
@@ -53,7 +54,18 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+ll d[MAXn];
 int main(){
   IOS();
-  
+  ll t;
+  cin>>t;
+  while(t--){
+    ll n;
+    cin>>n;
+    REP(i,n) cin>>d[i],d[i]*=2;
+    pary(d,d+n);
+    ll ans=0;
+    REP(i,n) ans^=d[i];
+    cout<<ans<<endl;
+  }
 }
