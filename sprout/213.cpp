@@ -52,39 +52,49 @@ template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
+const ll MAXsq=1e3+5;
 
-ll A,B;
-ll tp;
+deque<ll> dq[MAXsq];
 int main(){
   IOS();
-  ll t;
-  cin>>t;
-  while(t--){
-    ll n,m;
-    A=0,B=0;
-    cin>>m>>n;
-    REP(i,m){
-      cin>>tp;
-      A+=tp;
-    }
-    A=(A%MOD*m)%MOD;
-    REP(i,m){
-      cin>>tp;
-      B+=tp;
-    }
-    B=(B%MOD*m)%MOD;
-    if(n==1) cout<<A<<endl;
-    else if(n==2) cout<<B<<endl;
-    else{
-      ll tmp1=A,tmp2=B;
-      ll ans=0;
-      for(int i=3;i<=n;i++){
-        ans=(tmp1%MOD+tmp2%MOD)%MOD;
-        tmp1=tmp2%MOD;
-        tmp2=ans%MOD;
+  ll n,m;
+  cin>>n>>m;
+  ll k=(ll)sqrt(n),j=0;
+  REP1(i,n){
+    ll t;
+    cin>>t;
+    dq[j].pb(t);
+    if(i%k==0) j++;
+  }
+  while(m--){
+    string s;
+    ll x;
+    cin>>s>>x;
+    x--;
+    ll cur=x/k,tp=x%k;
+    if(s[0]=='A'){
+      ll y;
+      cin>>y;
+      dq[cur].insert(dq[cur].begin()+tp,y);
+      while(SZ(dq[cur])>k){
+        ll u=dq[cur].back();
+        dq[cur].pob();
+        dq[cur+1].push_front(u);
+        cur++;
       }
-      debug(ans);
-      cout<<ans<<endl;
+    }
+    else{
+      debug(SZ(dq[cur]),cur,tp);
+      if(s[0]=='Q') cout<<dq[cur].at(tp)<<endl;
+      else{
+        dq[cur].erase(dq[cur].begin()+tp);
+        while(SZ(dq[cur])<k && SZ(dq[cur+1])>0){
+          ll u=dq[cur+1].front();
+          dq[cur+1].pop_front();
+          dq[cur].pb(u);
+          cur++;
+        }
+      }
     }
   }
 }

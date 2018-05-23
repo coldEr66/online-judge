@@ -49,42 +49,28 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=2e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll A,B;
-ll tp;
+ll d[MAXn];
+vector<ll> v,g[MAXn];
 int main(){
   IOS();
-  ll t;
-  cin>>t;
-  while(t--){
-    ll n,m;
-    A=0,B=0;
-    cin>>m>>n;
-    REP(i,m){
-      cin>>tp;
-      A+=tp;
-    }
-    A=(A%MOD*m)%MOD;
-    REP(i,m){
-      cin>>tp;
-      B+=tp;
-    }
-    B=(B%MOD*m)%MOD;
-    if(n==1) cout<<A<<endl;
-    else if(n==2) cout<<B<<endl;
-    else{
-      ll tmp1=A,tmp2=B;
-      ll ans=0;
-      for(int i=3;i<=n;i++){
-        ans=(tmp1%MOD+tmp2%MOD)%MOD;
-        tmp1=tmp2%MOD;
-        tmp2=ans%MOD;
-      }
-      debug(ans);
-      cout<<ans<<endl;
-    }
+  ll n,k;
+  cin>>n>>k;
+  REP(i,n) cin>>d[i],v.pb(d[i]);
+  while(k--){
+    ll a,b;
+    cin>>a>>b;
+    a--,b--;
+    g[a].pb(b);
+    g[b].pb(a);
+  }
+  sort(ALL(v));
+  REP(i,n){
+    ll tmp=lower_bound(ALL(v),d[i])-v.begin();
+    for(auto it:g[i])if(d[it]<d[i]) tmp--;
+    cout<<tmp<<endl;
   }
 }

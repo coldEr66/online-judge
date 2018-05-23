@@ -53,38 +53,27 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll A,B;
-ll tp;
+ll v[55];
+ll a[1005];
+vector<ii> d;
 int main(){
   IOS();
-  ll t;
-  cin>>t;
-  while(t--){
-    ll n,m;
-    A=0,B=0;
-    cin>>m>>n;
-    REP(i,m){
-      cin>>tp;
-      A+=tp;
-    }
-    A=(A%MOD*m)%MOD;
-    REP(i,m){
-      cin>>tp;
-      B+=tp;
-    }
-    B=(B%MOD*m)%MOD;
-    if(n==1) cout<<A<<endl;
-    else if(n==2) cout<<B<<endl;
-    else{
-      ll tmp1=A,tmp2=B;
-      ll ans=0;
-      for(int i=3;i<=n;i++){
-        ans=(tmp1%MOD+tmp2%MOD)%MOD;
-        tmp1=tmp2%MOD;
-        tmp2=ans%MOD;
-      }
-      debug(ans);
-      cout<<ans<<endl;
-    }
+  int n;
+  cin>>n;
+  REP(i,n){
+    cin>>v[i];
+    a[v[i]]++;
   }
+  REP(i,1005){
+    if(a[i]==0) continue;
+    ll idx=-1;
+    REP(j,n){
+      if(v[j]==i) idx=j;
+    }
+    d.pb({idx,i});
+  }
+  sort(ALL(d));
+  cout<<SZ(d)<<endl;
+  REP(i,SZ(d)) cout<<d[i].S<<' ';
+  cout<<endl;
 }

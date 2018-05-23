@@ -5,12 +5,10 @@ using namespace std;
 int d[105];
 int math[105];
 int x[105];
-
 bool cmp(int a,int b){
   if(d[a]!=d[b]) return d[a]>d[b];
   else return math[a]>math[b];
 }
-
 int main(){
   int n;
   cin>>n;

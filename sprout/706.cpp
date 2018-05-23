@@ -53,38 +53,46 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll A,B;
-ll tp;
+ll d[MAXn];
+map<ll,ll> tol;
 int main(){
   IOS();
-  ll t;
-  cin>>t;
-  while(t--){
-    ll n,m;
-    A=0,B=0;
-    cin>>m>>n;
-    REP(i,m){
-      cin>>tp;
-      A+=tp;
-    }
-    A=(A%MOD*m)%MOD;
-    REP(i,m){
-      cin>>tp;
-      B+=tp;
-    }
-    B=(B%MOD*m)%MOD;
-    if(n==1) cout<<A<<endl;
-    else if(n==2) cout<<B<<endl;
-    else{
-      ll tmp1=A,tmp2=B;
-      ll ans=0;
-      for(int i=3;i<=n;i++){
-        ans=(tmp1%MOD+tmp2%MOD)%MOD;
-        tmp1=tmp2%MOD;
-        tmp2=ans%MOD;
-      }
-      debug(ans);
-      cout<<ans<<endl;
+  ll n;
+  cin>>n;
+  REP(i,n-1) cin>>d[i];
+  sort(d,d+n-1);
+  if(n==2){
+    if(d[0]==1) cout<<2<<endl;
+    else cout<<1<<endl;
+    return 0;
+  }
+  if(n==3){
+    ll k=d[1]-d[0];
+    if(d[0]>k) cout<<d[0]-k<<endl;
+    else if(k%2==0) cout<<d[0]+k/2<<endl;
+    else cout<<d[1]+k<<endl;
+    return 0;
+  }
+  ll tp=-1;
+  REP(i,n-2){
+    tol[d[i+1]-d[i]]++;
+    if(tol[d[i+1]-d[i]]>=2){
+      tp=d[i+1]-d[i];
+      break;
     }
   }
+  if(tp==-1){
+    ll mx=-1;
+    REP(i,n-2) chkmax(mx,d[i+1]-d[i]);
+    REP(i,n-2)if(d[i+1]-d[i]==mx) return cout<<d[i]+mx/2<<endl,0;
+  }
+  else{
+    REP(i,n-2){
+      if(d[i+1]-d[i]!=tp){
+        return cout<<d[i]+tp<<endl,0;
+      }
+    }
+  }
+  if(d[0]-tp>0) cout<<d[0]-tp<<endl;
+  else cout<<d[n-2]+tp<<endl;
 }

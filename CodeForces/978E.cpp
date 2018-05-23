@@ -49,42 +49,27 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e3+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll A,B;
-ll tp;
+ll d[MAXn];
 int main(){
   IOS();
-  ll t;
-  cin>>t;
-  while(t--){
-    ll n,m;
-    A=0,B=0;
-    cin>>m>>n;
-    REP(i,m){
-      cin>>tp;
-      A+=tp;
-    }
-    A=(A%MOD*m)%MOD;
-    REP(i,m){
-      cin>>tp;
-      B+=tp;
-    }
-    B=(B%MOD*m)%MOD;
-    if(n==1) cout<<A<<endl;
-    else if(n==2) cout<<B<<endl;
-    else{
-      ll tmp1=A,tmp2=B;
-      ll ans=0;
-      for(int i=3;i<=n;i++){
-        ans=(tmp1%MOD+tmp2%MOD)%MOD;
-        tmp1=tmp2%MOD;
-        tmp2=ans%MOD;
-      }
-      debug(ans);
-      cout<<ans<<endl;
-    }
+  ll n,w;
+  cin>>n>>w;
+  REP(i,n) cin>>d[i];
+  ll mx=-INF,mn=INF;
+  ll tmp=0;
+  REP(i,n){
+    tmp+=d[i];
+    chkmax(mx,tmp);
+    chkmin(mn,tmp);
   }
+  mx=min(w-mx,w);
+  mn=max(0LL,(-1LL*mn));
+  debug(mx,mn);
+  ll ans=mx-mn+1;
+  if(ans>0) cout<<ans<<endl;
+  else cout<<0<<endl;
 }

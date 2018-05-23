@@ -53,38 +53,15 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll A,B;
-ll tp;
 int main(){
   IOS();
-  ll t;
-  cin>>t;
-  while(t--){
-    ll n,m;
-    A=0,B=0;
-    cin>>m>>n;
-    REP(i,m){
-      cin>>tp;
-      A+=tp;
-    }
-    A=(A%MOD*m)%MOD;
-    REP(i,m){
-      cin>>tp;
-      B+=tp;
-    }
-    B=(B%MOD*m)%MOD;
-    if(n==1) cout<<A<<endl;
-    else if(n==2) cout<<B<<endl;
-    else{
-      ll tmp1=A,tmp2=B;
-      ll ans=0;
-      for(int i=3;i<=n;i++){
-        ans=(tmp1%MOD+tmp2%MOD)%MOD;
-        tmp1=tmp2%MOD;
-        tmp2=ans%MOD;
-      }
-      debug(ans);
-      cout<<ans<<endl;
-    }
+  ll n,ans=0;
+  string s;
+  cin>>n>>s;
+  REP(i,n){
+    ll cnt=0;
+    while(s[i]=='x' && i<n) i++,cnt++;
+    if(cnt>=2) i--,ans+=cnt-2;
   }
+  cout<<ans<<endl;
 }

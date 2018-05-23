@@ -53,38 +53,53 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll A,B;
-ll tp;
+vector<int> g[MAXn];
+int adj[MAXn];
+vector<ii> ed;
 int main(){
   IOS();
-  ll t;
-  cin>>t;
-  while(t--){
-    ll n,m;
-    A=0,B=0;
-    cin>>m>>n;
-    REP(i,m){
-      cin>>tp;
-      A+=tp;
-    }
-    A=(A%MOD*m)%MOD;
-    REP(i,m){
-      cin>>tp;
-      B+=tp;
-    }
-    B=(B%MOD*m)%MOD;
-    if(n==1) cout<<A<<endl;
-    else if(n==2) cout<<B<<endl;
-    else{
-      ll tmp1=A,tmp2=B;
-      ll ans=0;
-      for(int i=3;i<=n;i++){
-        ans=(tmp1%MOD+tmp2%MOD)%MOD;
-        tmp1=tmp2%MOD;
-        tmp2=ans%MOD;
+  int n,m;
+  cin>>n>>m;
+  int k=300;
+  debug(k);
+  REP(i,m){
+    int a,b;
+    cin>>a>>b;
+    if(a>b) swap(a,b);
+    ed.pb({a,b});
+    g[a].pb(b);
+    g[b].pb(a);
+  }
+  REP(i,n) sort(ALL(g[i]));
+  debug(ed);
+  int ans=0,tp=0;
+  tp++;
+  REP(i,n){
+    ll TMD=SZ(g[i]);
+    if(TMD>k){
+      for(auto it:g[i]) adj[it]=tp;
+      REP(j,m){
+        ii cur=ed[j];
+        if(adj[cur.F]==tp && adj[cur.S]==tp) ans++;
       }
-      debug(ans);
-      cout<<ans<<endl;
+      tp++;
+    }
+    else{
+      REP(j,TMD){
+        for(int u=j+1;u<TMD;u++){
+          int l=0,r=SZ(g[g[i][j]]);
+          ll cur=g[i][u];
+          while(l!=r-1){
+            int mid=(l+r)/2;
+            if(g[g[i][j]][mid]<=cur) l=mid;
+            else r=mid;
+          }
+          if(g[g[i][j]][l]==cur) ans++;
+        }
+      }
     }
   }
+  debug(ans);
+  ans/=3;
+  cout<<ans<<endl;
 }

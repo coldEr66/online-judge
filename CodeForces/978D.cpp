@@ -53,38 +53,47 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll A,B;
-ll tp;
+ll d[MAXn];
+vector<ii> v;
 int main(){
   IOS();
-  ll t;
-  cin>>t;
-  while(t--){
-    ll n,m;
-    A=0,B=0;
-    cin>>m>>n;
-    REP(i,m){
-      cin>>tp;
-      A+=tp;
-    }
-    A=(A%MOD*m)%MOD;
-    REP(i,m){
-      cin>>tp;
-      B+=tp;
-    }
-    B=(B%MOD*m)%MOD;
-    if(n==1) cout<<A<<endl;
-    else if(n==2) cout<<B<<endl;
-    else{
-      ll tmp1=A,tmp2=B;
-      ll ans=0;
-      for(int i=3;i<=n;i++){
-        ans=(tmp1%MOD+tmp2%MOD)%MOD;
-        tmp1=tmp2%MOD;
-        tmp2=ans%MOD;
-      }
-      debug(ans);
-      cout<<ans<<endl;
+  ll n;
+  ll ans=INF;
+  cin>>n;
+  REP(i,n) cin>>d[i];
+  if(n<=2) return cout<<0<<endl,0;
+  REP(i,3){
+    REP(j,3){
+      ll tmp1=d[0],tmp2=d[n-1];
+      if(i==0) tmp1++;
+      else if(i==2) tmp1--;
+      if(j==0) tmp2++;
+      else if(j==2) tmp2--;
+      v.pb({tmp1,tmp2});
     }
   }
+  debug(v);
+  REP(i,SZ(v)){
+    ii cur=v[i];
+    //debug((cur.S-cur.F)%(n-1));
+    if((cur.S-cur.F)%(n-1)!=0) continue;
+    ll tmp=(cur.S-cur.F)/(n-1);
+    //debug(tmp,cur.S-cur.F);
+    debug("ok");
+    bool fg=false;
+    ll ct=0,st=cur.F;
+    REP(j,n){
+      ll tp=d[j];
+      debug(tp,tmp,j,st);
+      if(tp+1==st || tp-1==st) ct++;
+      else if(tp!=st){
+        fg=true;
+        break;
+      }
+      st+=tmp;
+    }
+    if(!fg) chkmin(ans,ct);
+  }
+  if(ans>=INF) cout<<-1<<endl;
+  else cout<<ans<<endl;
 }

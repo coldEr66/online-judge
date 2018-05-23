@@ -53,38 +53,59 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll A,B;
-ll tp;
-int main(){
-  IOS();
-  ll t;
-  cin>>t;
-  while(t--){
-    ll n,m;
-    A=0,B=0;
-    cin>>m>>n;
-    REP(i,m){
-      cin>>tp;
-      A+=tp;
-    }
-    A=(A%MOD*m)%MOD;
-    REP(i,m){
-      cin>>tp;
-      B+=tp;
-    }
-    B=(B%MOD*m)%MOD;
-    if(n==1) cout<<A<<endl;
-    else if(n==2) cout<<B<<endl;
-    else{
-      ll tmp1=A,tmp2=B;
-      ll ans=0;
-      for(int i=3;i<=n;i++){
-        ans=(tmp1%MOD+tmp2%MOD)%MOD;
-        tmp1=tmp2%MOD;
-        tmp2=ans%MOD;
+struct SX{
+  ll sum;
+  ll id;
+};
+bool operator< (SX a,SX b){return a.sum<b.sum;};
+vector<SX> a,b;
+void solve(int N,long long K,long long A[]){
+  ll tmp=N/2;
+  debug(tmp);
+  REP(i,(1<<tmp)){
+    ll tp=0,u=0;
+    REP(j,tmp){
+      if(i&(1<<j)){
+        tp+=(1<<j);
+        u+=A[j];
       }
-      debug(ans);
-      cout<<ans<<endl;
+    }
+    SX t;
+    t.sum=u;
+    t.id=tp;
+    a.pb(t);
+  }
+  REP(i,(1<<(N-tmp))){
+    ll tp=i,u=0;
+    REP(j,N-tmp){
+      if(i&(1<<j)) u+=A[j+tmp];
+    }
+    SX t;
+    t.sum=u;
+    t.id=tp;
+    b.pb(t);
+  }
+  debug(SZ(a),SZ(b));
+  sort(ALL(a));
+  sort(ALL(b));
+  for(auto it:a){
+    ll l=0,r=SZ(b);
+    while(l!=r-1){
+      ll mid=(l+r)/2;
+      if(K-it.sum>=b[mid].sum) l=mid;
+      else r=mid;
+    }
+    debug("ok");
+    if(b[l].sum==K-it.sum){
+      REP(i,21)if(it.id&(1<<i)) Report(i+1);
+      REP(i,21)if(b[l].id&(1<<i)) Report(i+(int)tmp+1);
+      Report(-1);
     }
   }
 }
+/*
+int main(){
+  ll y[]={6,8,9};
+  solve(3,17,y);
+}
+*/
