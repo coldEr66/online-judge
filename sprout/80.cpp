@@ -49,32 +49,60 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e6+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll a[MAXn],b[MAXn];
+struct S{
+  ll l,r;
+  ll mn;
+} seg[MAXn*4];
+ll d[MAXn];
+ll qr(ll x,ll y,ll id){
+  if(seg[id].l==x && seg[id].r==y) return seg[id].mn;
+  ll mid=(seg[id].l+seg[id].r)/2;
+  if(y<=mid) return qr(x,y,id*2+1);
+  else if(x>=mid) return qr(x,y,id*2+2);
+  else return min(qr(x,mid,id*2+1),qr(mid,y,id*2+2));
+}
+void ins(ll x,ll y,ll id){
+  if(seg[id].l==seg[id].r-1) seg[id].mn=y;
+  else{
+    ll mid=(seg[id].l+seg[id].r)/2;
+    if(x<mid) ins(x,y,id*2+1);
+    else ins(x,y,id*2+2);
+    seg[id].mn=min(seg[id*2+1].mn,seg[id*2+2].mn);
+  }
+}
+void build(ll x,ll l,ll r){
+  seg[x].l=l,seg[x].r=r;
+  if(l==r-1){
+    seg[x].mn=d[l];
+    return;
+  }
+  ll mid=(l+r)/2;
+  build(2*x+1,l,mid);
+  build(2*x+2,mid,r);
+  seg[x].mn=min(seg[2*x+1].mn,seg[2*x+2].mn);
+}
 int main(){
   IOS();
-  ll n,q;
-  cin>>n>>q;
-  REP1(i,n) cin>>a[i];
-  REP1(i,n) cin>>b[i];
-  for(int i=2;i<=n;i+=2) swap(a[i],b[i]);
-  REP1(i,n){
-    a[i]+=a[i-1];
-    b[i]+=b[i-1];
-  }
-  while(q--){
-    ll x,l,r;
-    cin>>x>>l>>r;
-    if(x&1){
-      if(l&1) cout<<a[r]-a[l-1]<<endl;
-      else cout<<b[r]-b[l-1]<<endl;
+  ll t,n;
+  cin>>t>>n;
+  REP(i,n) cin>>d[i];
+  REP(i,4*MAXn) seg[i].mn=INF;
+  build(0,0,n);
+  while(t--){
+    //REP(i,4*n) debug(seg[i].l,seg[i].r,seg[i].mn);
+    ll u,x,y;
+    cin>>u>>x>>y;
+    if(u==1){
+      ll ans=qr(x,y+1,0);
+      cout<<ans<<endl;
     }
     else{
-      if(l&1) cout<<b[r]-b[l-1]<<endl;
-      else cout<<a[r]-a[l-1]<<endl;
+      d[x]=y;
+      ins(x,y,0);
     }
   }
 }

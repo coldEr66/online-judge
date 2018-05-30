@@ -53,28 +53,66 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll a[MAXn],b[MAXn];
+struct S{
+  ll l,r;
+  ll mx,tmp;
+} seg[MAXn*4];
+ll d[MAXn];
+void build(ll x,ll y,ll id){
+  seg[id].l=x,seg[id].r=y;
+  seg[id].mx=seg[id].tmp=0;
+  if(x==y-1) seg[id].mx=d[x];
+  else{
+    ll mid=(x+y)/2;
+    build(x,mid,id*2+1);
+    build(mid,y,id*2+2);
+    seg[id].mx=max(seg[id*2+1].mx,seg[id*2+2].mx);
+  }
+}
+void ins(ll x,ll y,ll v,ll id){
+  //debug(x,y,id,seg[id].l,seg[id].r);
+  if(seg[id].l==x && seg[id].r==y){
+    seg[id].tmp+=v;
+    //debug("ok");
+  }
+  else{
+    ll mid=(seg[id].l+seg[id].r)/2;
+    if(y<=mid) ins(x,y,v,id*2+1);
+    else if(x>=mid) ins(x,y,v,id*2+2);
+    else{
+      ins(x,mid,v,id*2+1);
+      ins(mid,y,v,id*2+2);
+    }
+    seg[id].mx=max(seg[id*2+1].mx+seg[id*2+1].tmp,seg[id*2+2].mx+seg[id*2+2].tmp);
+  }
+}
+ll qr(ll x,ll y,ll id){
+  //debug("hi",x,y,id);
+  if(seg[id].l==x && seg[id].r==y) return seg[id].mx+seg[id].tmp;
+  else{
+    ll mid=(seg[id].l+seg[id].r)/2;
+    if(y<=mid) return seg[id].tmp+qr(x,y,id*2+1);
+    else if(x>=mid) return seg[id].tmp+qr(x,y,id*2+2);
+    else return seg[id].tmp+max(qr(x,mid,id*2+1),qr(mid,y,id*2+2));
+  }
+}
 int main(){
   IOS();
   ll n,q;
   cin>>n>>q;
-  REP1(i,n) cin>>a[i];
-  REP1(i,n) cin>>b[i];
-  for(int i=2;i<=n;i+=2) swap(a[i],b[i]);
-  REP1(i,n){
-    a[i]+=a[i-1];
-    b[i]+=b[i-1];
-  }
+  REP(i,n) cin>>d[i];
+  build(0,n,0);
+  //REP(i,4*n) debug(seg[i].mx,seg[i].l,seg[i].r);
   while(q--){
-    ll x,l,r;
-    cin>>x>>l>>r;
-    if(x&1){
-      if(l&1) cout<<a[r]-a[l-1]<<endl;
-      else cout<<b[r]-b[l-1]<<endl;
+    ll u,l,r;
+    cin>>u>>l>>r;
+    l--;
+    if(u==1){
+      ll x;
+      cin>>x;
+      ins(l,r,x,0);
+      //REP(i,4*n) debug(seg[i].mx,seg[i].l,seg[i].r);
     }
-    else{
-      if(l&1) cout<<b[r]-b[l-1]<<endl;
-      else cout<<a[r]-a[l-1]<<endl;
-    }
+    else cout<<qr(l,r,0)<<endl;
   }
 }

@@ -53,28 +53,23 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll a[MAXn],b[MAXn];
+ll ans,tmp;
+ll a[30],b[30];
 int main(){
   IOS();
-  ll n,q;
-  cin>>n>>q;
-  REP1(i,n) cin>>a[i];
-  REP1(i,n) cin>>b[i];
-  for(int i=2;i<=n;i+=2) swap(a[i],b[i]);
-  REP1(i,n){
-    a[i]+=a[i-1];
-    b[i]+=b[i-1];
-  }
-  while(q--){
-    ll x,l,r;
-    cin>>x>>l>>r;
-    if(x&1){
-      if(l&1) cout<<a[r]-a[l-1]<<endl;
-      else cout<<b[r]-b[l-1]<<endl;
+  ll n;
+  string s;
+  cin>>n>>s;
+  REP1(i,n-1){
+    tmp=0;
+    RST(a,0);
+    RST(b,0);
+    REP(j,n){
+      if(j+1<=i) a[s[j]-'a']++;
+      else b[s[j]-'a']++;
     }
-    else{
-      if(l&1) cout<<b[r]-b[l-1]<<endl;
-      else cout<<a[r]-a[l-1]<<endl;
-    }
+    REP(j,26)if(a[j] && b[j]) tmp++;
+    chkmax(ans,tmp);
   }
+  cout<<ans<<endl;
 }

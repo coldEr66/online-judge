@@ -53,28 +53,54 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll a[MAXn],b[MAXn];
+vector<ll> g[MAXn];
+ll vis[MAXn];
+ll ans[MAXn];
+ii d[MAXn];   //紀錄子樹總重量 , 紀錄子樹值總和
+ll sum,n;
+ll tmp[MAXn];
+ii dfs1(ll x){
+  vis[x]=1;
+  for(auto it:g[x]){
+    if(vis[it]) continue;
+    d[x].F+=dfs1(it).F;
+    d[x].S+=dfs1(it).S;
+  }
+  return {d[x].F+1,d[x].S+x};
+}
+void dfs2(ll x,ll fa){
+  vis[x]=1;
+  for(auto it:g[x]){
+    if(vis[it]) continue;
+    dfs2(it,x);
+  }
+  if(fa!=0) tmp[fa]=tmp[fa]+(d[x].S+x)*(n-d[x].F-2)+(sum-d[x].S-x-fa)*(d[x].F+1);
+  tmp[x]=tmp[x]+(n-d[x].F-1)*d[x].S+d[x].F*(sum-d[x].S-x);
+  debug(tmp[fa],fa);
+  debug(tmp[x],x);
+  //ans[fa]=ans[fa]+(sum-fa-d[fa].S)+d[fa].S*(n-d[fa].F-1);
+}
 int main(){
   IOS();
-  ll n,q;
-  cin>>n>>q;
-  REP1(i,n) cin>>a[i];
-  REP1(i,n) cin>>b[i];
-  for(int i=2;i<=n;i+=2) swap(a[i],b[i]);
+  cin>>n;
+  sum=n*(n+1)/2;
+  debug(sum);
+  REP1(i,n) ans[i]=i*(n-2)+sum;
+  pary(ans+1,ans+n+1);
+  REP(i,n-1){
+    ll a,b;
+    cin>>a>>b;
+    g[a].pb(b);
+    g[b].pb(a);
+  }
+  dfs1(1);
+  RST(vis,0);
+  dfs2(1,0);
+  pary(tmp+1,tmp+n+1);
+  pary(d+1,d+n+1);
   REP1(i,n){
-    a[i]+=a[i-1];
-    b[i]+=b[i-1];
+    tmp[i]/=2;
+    ans[i]+=tmp[i];
   }
-  while(q--){
-    ll x,l,r;
-    cin>>x>>l>>r;
-    if(x&1){
-      if(l&1) cout<<a[r]-a[l-1]<<endl;
-      else cout<<b[r]-b[l-1]<<endl;
-    }
-    else{
-      if(l&1) cout<<b[r]-b[l-1]<<endl;
-      else cout<<a[r]-a[l-1]<<endl;
-    }
-  }
+  REP1(i,n) cout<<ans[i]<<endl;
 }

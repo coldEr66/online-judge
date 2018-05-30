@@ -49,32 +49,41 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e6+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll a[MAXn],b[MAXn];
+ll h[MAXn],c[MAXn];
+ll tmp[MAXn];
 int main(){
   IOS();
-  ll n,q;
-  cin>>n>>q;
-  REP1(i,n) cin>>a[i];
-  REP1(i,n) cin>>b[i];
-  for(int i=2;i<=n;i+=2) swap(a[i],b[i]);
-  REP1(i,n){
-    a[i]+=a[i-1];
-    b[i]+=b[i-1];
+  ll n,k,f;
+  cin>>n>>k>>f;
+  REP(i,MAXn) tmp[i]=INF;
+  REP(i,n) cin>>h[i];
+  REP(i,n){
+    cin>>c[i];
+    if(i!=0) c[i]+=c[i-1];
   }
-  while(q--){
-    ll x,l,r;
-    cin>>x>>l>>r;
-    if(x&1){
-      if(l&1) cout<<a[r]-a[l-1]<<endl;
-      else cout<<b[r]-b[l-1]<<endl;
-    }
-    else{
-      if(l&1) cout<<b[r]-b[l-1]<<endl;
-      else cout<<a[r]-a[l-1]<<endl;
-    }
+  pary(c,c+n);
+  tmp[n-1]=INF;
+  for(int i=(int)n-2;i>=0;i--){
+    if(abs(h[i]-h[i+1])>k) tmp[i]=i;
+    else tmp[i]=tmp[i+1];
   }
+  if(tmp[0]==INF) return cout<<0<<endl,0;
+  ll tp=0,ans=INF;
+  REP(i,n){
+    ll idx=tmp[0];
+    tp=c[i];
+    while(idx<n-1){
+      idx+=(i+1);
+      tp+=f;
+      idx=tmp[idx];
+      debug(idx);
+    }
+    debug(ans,tp);
+    chkmin(ans,tp);
+  }
+  cout<<ans<<endl;
 }
