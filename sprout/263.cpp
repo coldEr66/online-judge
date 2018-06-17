@@ -76,6 +76,7 @@ int main(){
   n = SZ(s);
   build();
   pary(z,z+n);
+  debug(*prev(ls.begin()));
   REP1(i,n-1) box[z[i]].pb(i);
   REP(i,n+1) it[i] = ls.insert(ls.end(),i);
   ll ans = 1;

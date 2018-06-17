@@ -49,84 +49,72 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=24,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e2+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-pair<lf,lf> x[MAXn];
-ll l[MAXn][MAXn];
-ll dp[(1<<MAXn)];
-ll n;
-bool chk(lf a,lf b){
-  if(abs(a-b)<1e-6) return true;
-  else return false;
-}
-/*
-void cal(ll tmp){
-  //debug("hi");
-  //debug(tmp);
-  if(dp[tmp]!=INF) return;
-  debug(dp[tmp],tmp);
-  REP(i,n){
-    //debug("for");
-    if((1<<i)&tmp) continue;
-    for(int j=i+1;j<n;j++){
-      if((1<<j)&tmp) continue;
-      if(l[i][j]==0) continue;
-      ll nxt=tmp|l[i][j];
-      cal(nxt);
-      chkmin(dp[tmp],dp[nxt]+1);
-    }
-    debug("tmp",i);
-    cal(tmp|(1<<i));
-    chkmin(dp[tmp],dp[tmp|(1<<i)]+1);
-    break;
+struct E{
+  ll to,w,lim,dcnt;
+};
+ll n,m,s,e,f;
+ll a,b,c,d,cc;
+vector<E> g[MAXn];
+ll dis[MAXn];
+bool vis[MAXn];
+ll chk_cost(E tmp){
+  ll ret=0;
+  if(f>tmp.lim){
+    ret+=tmp.w*tmp.lim;
+    ret+=tmp.dcnt*(f-tmp.lim);
   }
+  else ret+=f*tmp.w;
+  return ret;
 }
-*/
 int main(){
   IOS();
   ll t;
   cin>>t;
   while(t--){
-    cin>>n;
-    RST(dp,0);
-    REP(i,(1<<n)) dp[i]=INF;
-    RST(l,0);
-    REP(i,n) cin>>x[i].F>>x[i].S;
-    //sort(x,x+n);
-    dp[0]=0;
-    //debug((1<<n)-1);
+    REP(i,MAXn){
+      vis[i] = false;
+      dis[i] = INF;
+      g[i].clear();
+    }
+    cin>>n>>m>>s>>e>>f;
+    s--,e--;
+    ll root = s;
+    ll dst = e;
+    while(m--){
+      cin>>a>>b>>c>>d>>cc;
+      E tmp;
+      a--,b--;
+      tmp.to = b;
+      tmp.w = c;
+      tmp.lim = d;
+      tmp.dcnt = cc;
+      g[a].pb(tmp);
+    }
+    REP(i,n) debug(SZ(g[i]));
+    dis[root] = 0;
+    debug(root,dst);
     REP(i,n){
-      for(int j=i+1;j<n;j++){
-        if(chk(x[i].F,x[j].F)) continue;
-        lf ta=(x[i].S/x[i].F-x[j].S/x[j].F)/(x[i].F-x[j].F);
-        lf tb=x[i].S/x[i].F-ta*x[i].F;
-        if(ta>=0) continue;
-        ll tmp = (1<<i)|(1<<j);
-        REP(k,n)if(k!=i && k!=j && chk(x[k].F*x[k].F*ta+tb*x[k].F,x[k].S)) tmp|=(1<<k);
-        //debug(tmp,i,j);
-        l[i][j]=tmp;
-      }
-    }
-    REP(i,n) pary(l[i],l[i]+n);
-    //cal(0);
-    //pary(x,x+n);
-    REP(i,(1<<n)){
-      if(dp[i]==INF) continue;
+      ll tp = -1,mn = INF;
       REP(j,n){
-        if((1<<j)&i) continue;
-        for(int k=j+1;k<n;k++){
-          if(((1<<k)&i)==0 && l[j][k]) chkmin(dp[i|l[j][k]],dp[i]+1);
-          // if((1<<k)&i && l[j][k]){
-          //   ll len = i^(i&l[j][k]);
-          //   chkmin(dp[i|(1<<j)],dp[len]+1);
-          // }
+        if(!vis[j] && dis[j] < mn){
+          tp = j;
+          mn = dis[j];
         }
-        chkmin(dp[i|(1<<j)],dp[i]+1);
-        break;
+      }
+      debug(tp);
+      if(tp == -1) break;
+      vis[tp] = true;
+      for(E it:g[tp]){
+        ll to = it.to,ct = chk_cost(it);
+        debug(ct);
+        if(!vis[to] && dis[to] > dis[tp] + ct) dis[to] = dis[tp] + ct;
+        debug(dis[to],to);
       }
     }
-    cout<<dp[(1<<n)-1]<<endl;
+    cout<<dis[dst]<<endl;
   }
 }
