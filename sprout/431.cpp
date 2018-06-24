@@ -49,27 +49,67 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=2e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll ans,tmp;
-ll a[30],b[30];
+ll n,m,q;
+vector<ii> g1[MAXn],g2[MAXn];
+ll d1[MAXn],d2[MAXn];
+ll vis[MAXn];
+void Dijkstra(bool c,ll st){
+  MinHeap<ii> pq;
+  RST(vis,0);
+  if(c) pq.push({d1[st],st});
+  else pq.push({d2[st],st});
+  REP(i,n){
+    ll tp = -1;
+    while(SZ(pq) && vis[tp = pq.top().S]) pq.pop();
+    debug(tp);
+    if(tp==-1) break;
+    vis[tp] = 1;
+    if(c){
+      for(ii it:g1[tp])if(!vis[it.F] && d1[it.F] > d1[tp] + it.S){
+        debug(it);
+        d1[it.F] = d1[tp] + it.S;
+        pq.push({d1[it.F],it.F});
+      }
+    }
+    else{
+      for(ii it:g2[tp])if(!vis[it.F] && d2[it.F] > d2[tp] + it.S){
+        d2[it.F] = d2[tp] + it.S;
+        pq.push({d2[it.F],it.F});
+      }
+    }
+  }
+}
 int main(){
   IOS();
-  ll n;
-  string s;
-  cin>>n>>s;
-  REP1(i,n-1){
-    tmp=0;
-    RST(a,0);
-    RST(b,0);
-    REP(j,n){
-      if(j+1<=i) a[s[j]-'a']++;
-      else b[s[j]-'a']++;
-    }
-    REP(j,26)if(a[j] && b[j]) tmp++;
-    chkmax(ans,tmp);
+  cin>>n>>m>>q;
+  while(m--){
+    ll a,b,w;
+    cin>>a>>b>>w;
+    a--,b--;
+    g1[a].pb({b,w});
+    g2[b].pb({a,w});
   }
-  cout<<ans<<endl;
+  REP(i,MAXn){
+    d1[i] = INF;
+    d2[i] = INF;
+  }
+  d1[0] = 0;
+  d2[n-1] = 0;
+  Dijkstra(1,0);
+  Dijkstra(0,n-1);
+  pary(d1,d1+n);
+  pary(d2,d2+n);
+  ll ans = d1[n-1];
+  debug(ans);
+  while(q--){
+    ll a,b;
+    cin>>a>>b;
+    a--,b--;
+    ll tp = d1[a] + 1 + d2[b];
+    cout<<min(ans,tp)<<endl;
+  }
 }

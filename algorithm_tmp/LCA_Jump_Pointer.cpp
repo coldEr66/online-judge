@@ -1,6 +1,4 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
 typedef double lf;
@@ -51,11 +49,57 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=3e4+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+ll n,q;
+vector<ll> g[MAXn];
+ll in[MAXn],out[MAXn];
+ll d[MAXn];
+ll an[MAXn][MAXlg];
+ll t=0;
+bool chk(ll x,ll y){
+  return in[x]<=in[y] && out[x]>=out[y];
+}
+void dfs(ll cur,ll fa){
+  in[cur] = t++;
+  if(cur!=fa) d[cur] = d[fa] + 1;
+  an[cur][0] = fa;
+  for(int i=1;1<<i < n;i++){
+    an[cur][i] = an[an[cur][i-1]][i-1];
+  }
+  for(auto it:g[cur]){
+    if(it==fa) continue;
+    dfs(it,cur);
+  }
+  out[cur] = t++;
+}
+ll LCA(ll a,ll b){
+  if(chk(a,b)) return a;
+  if(chk(b,a)) return b;
+  for(int i=__lg((int)n);i>=0;i--){
+    if(!chk(an[a][i],b)) a = an[a][i];
+  }
+  return an[a][0];
+}
 int main(){
   IOS();
-  
+  cin>>n>>q;
+  REP(i,n){
+    ll tmp;
+    while(cin>>tmp && tmp!=0) g[i].pb(tmp-1);
+  }
+  REP(i,n) d[i] = INF;
+  d[0] = 0;
+  dfs(0,0);
+  pary(d,d+n);
+  while(q--){
+    ll a,b;
+    cin>>a>>b;
+    a--,b--;
+    ll ans = LCA(a,b);   // calculate the LCA of a and b
+    ll tmp = d[a]+d[b]-2*d[ans];  //calculate the distance from a to b
+    cout<<ans + 1<<' '<<tmp<<endl;
+  }
 }

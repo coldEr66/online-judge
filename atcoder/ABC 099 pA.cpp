@@ -57,5 +57,8 @@ const ll INF=(ll)1e18;
 
 int main(){
   IOS();
-  
+  ll n;
+  cin>>n;
+  if(n<1000) cout<<"ABC"<<endl;
+  else cout<<"ABD"<<endl;
 }

@@ -1,6 +1,4 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
 typedef double lf;
@@ -51,11 +49,57 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=5e2+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+ll w[MAXn][MAXn];
+ll dp[MAXn][MAXn];
 int main(){
   IOS();
-  
+  ll n;
+  cin>>n;
+  REP(i,n)REP(j,n) dp[i][j] = INF;
+  REP(i,n)REP(j,n){
+    cin>>w[i][j];
+    if(w[i][j]==-1) continue;
+    dp[i][j] = w[i][j];
+  }
+  REP(k,n){
+    //debug("hi");
+    ll ans = 0;
+    bool fg = true;
+    REP(i,n){
+      REP(j,n){
+        dp[i][j] = min(dp[i][j],dp[i][k]+dp[k][j]);
+        //debug(dp[i][j],i,j);
+      }
+    }
+    if(k==0){
+      cout<<0<<' ';
+      continue;
+    }
+    REP(i,k+1){
+      REP(j,k+1){
+        if(dp[i][j]==INF){
+          fg = false;
+          break;
+        }
+        if(dp[j][i]!=INF && dp[j][i]!=0) chkmax(ans,dp[j][i]),fg = true;
+        //if(dp[i][j]!=INF && dp[i][j]!=0) chkmax(ans,dp[i][j]),fg = true;
+      }
+      if(!fg) break;
+    }
+    /*
+    REP(i,k+1){
+      REP(j,k+1){
+        if(dp[i][j]==INF) fg = false;
+      }
+    }
+    */
+    if(k>1) cout<<" ";
+    if(!fg) cout<<-1;
+    else cout<<ans;
+  }
+  cout<<endl;
 }

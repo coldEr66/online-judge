@@ -1,4 +1,6 @@
 #include <bits/stdc++.h>
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
+#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
 typedef double lf;
@@ -49,29 +51,29 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=3e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll d[MAXn];
+vector<ll> v;
+ll dp[MAXn];
 int main(){
   IOS();
   ll n;
-  string s;
-  cin>>n>>s;
-  REP(i,n){
-    d[i+1]+=(s[i]=='W' ?1:0);
-    d[i+1]+=d[i];
+  cin>>n;
+  REP(i,n+1) dp[i] = INF;
+  v.pb(1);
+  for(int i=1;;i++){
+    ll a = (ll)pow(6,i),b = (ll)pow(9,i);
+    if(a>n) break;
+    if(a<=n) v.pb(a);
+    if(b<=n) v.pb(b);
   }
-  pary(d,d+n);
-  ll tmp;
-  ll ans=INF;
-  REP(i,n){
-    tmp=0;
-    ll x=n-i-1-(d[n]-d[i+1]),y=d[i];
-    tmp=x+y;
-    debug(x,y,tmp);
-    chkmin(ans,tmp);
+  sort(ALL(v));
+  REP(i,6) dp[i] = i;
+  for(int i=6;i<=n;i++)REP(j,SZ(v)){
+    if(i-v[j]<0) break;
+    dp[i] = min(dp[i-v[j]] + 1,dp[i]);
   }
-  cout<<ans<<endl;
+  cout<<dp[n]<<endl;
 }

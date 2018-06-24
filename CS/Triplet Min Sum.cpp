@@ -1,6 +1,4 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
 typedef double lf;
@@ -55,7 +53,75 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+ll n,q;
+vector<ll> g[MAXn];
+ii d[MAXn];
+bool vis[MAXn];
+ll t,in[MAXn],out[MAXn];
+ll an[MAXn][MAXlg];
+ll dis[MAXn];
+bool chk(ll x,ll y){
+  return in[x]<=in[y] && out[x]>=out[y];
+}
+void dfs(ll cur,ll fa){
+  in[cur] = t++;
+  an[cur][0] = fa;
+  if(cur!=fa) dis[cur] = dis[fa] + 1;
+  for(int i=1;1<<i < n;i++) an[cur][i] = an[an[cur][i-1]][i-1];
+  for(auto it:g[cur]){
+    if(it==fa) continue;
+    dfs(it,cur);
+  }
+  out[cur] = t++;
+}
+ll LCA(ll x,ll y){
+  if(chk(x,y)) return x;
+  if(chk(y,x)) return y;
+  for(int i=__lg((int)n);i>=0;i--){
+    if(!chk(an[x][i],y)) x = an[x][i];
+  }
+  return an[x][0];
+}
+ii sol(ll a,ll b,ll c){
+  ll tmp = LCA(a,b);
+  ll ret = INF;
+  if(chk(tmp,c)) chkmin(ret,dis[a]+dis[b]+dis[c]-3*dis[tmp]);
+  else if(chk(c,tmp)) chkmin(ret,dis[a]+dis[b]-dis[tmp]-dis[c]);
+  else{
+    ret = dis[a]+dis[b]-2*dis[tmp];
+    ll lca = LCA(tmp,c);
+    ret+=dis[tmp] + dis[c] -2*dis[lca];
+  }
+  return {ret,tmp};
+}
 int main(){
   IOS();
-  
+  cin>>n>>q;
+  REP(i,n-1){
+    ll a,b;
+    cin>>a>>b;
+    a--,b--;
+    g[a].pb(b);
+    g[b].pb(a);
+  }
+  dis[0] = 0;
+  dfs(0,0);
+  pary(dis,dis+n);
+  while(q--){
+    ll a,b,c;
+    cin>>a>>b>>c;
+    a--,b--,c--;
+    ii lca;
+    ii ta = sol(b,c,a);
+    ii tb = sol(a,c,b);
+    ii tc = sol(a,b,c);
+    debug(ta,tb,tc);
+    vector<ii> v;
+    v.pb(ta);
+    v.pb(tb);
+    v.pb(tc);
+    sort(ALL(v));
+    lca = v[0];
+    cout<<lca.S + 1<<' '<<lca.F<<endl;
+  }
 }

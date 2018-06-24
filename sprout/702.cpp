@@ -53,7 +53,67 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+ll n,m;
+ll f[MAXn];
+ll sz[MAXn];
+vector<ll> g[MAXn];
+ll fd(ll x){return f[x] = (x==f[x] ?x:fd(f[x]));}
+ll id(ll i,ll j){return i*m + j;}
+void mer(ll x,ll y){
+  if(sz[x = fd(x)] < sz[y = fd(y)]) swap(x,y);
+  f[y] = x;
+  sz[x]+=sz[y];
+}
+ll dp[MAXn];
+void dfs(ll cur){
+  dp[cur] = 1;
+  for(auto it:g[cur]){
+    if(dp[it]==-1) dfs(it);
+    chkmax(dp[cur],dp[it] + 1);
+  }
+}
 int main(){
   IOS();
-
+  //debug(123);
+  cin>>n>>m;
+  ll d[n+5][m+5];
+  RST(dp,-1);
+  REP(i,n)REP(j,m) cin>>d[i][j];
+  REP(i,n)REP(j,m) sz[id(i,j)]=1,f[id(i,j)]=id(i,j);
+  //debug(456);
+  REP(i,n){
+    //debug(i);
+    vector<ii> v;
+    REP(j,m) v.pb({d[i][j],j});
+    sort(ALL(v));
+    REP(j,m-1)if(v[j].F==v[j+1].F) mer(fd(id(i,v[j].S)),fd(id(i,v[j+1].S)));
+  }
+  REP(i,m){
+    //debug(i);
+    vector<ii> v;
+    REP(j,n) v.pb({d[j][i],j});
+    sort(ALL(v));
+    //debug("alive");
+    REP(j,n-1)if(v[j].F==v[j+1].F) mer(fd(id(v[j].S,i)),fd(id(v[j+1].S,i)));
+  }
+  //debug("hello");
+  REP(i,n){
+    vector<ii> v;
+    REP(j,m) v.pb({d[i][j],j});
+    sort(ALL(v));
+    REP(j,m-1)if(v[j].F < v[j+1].F) g[fd(id(i,v[j+1].S))].pb(fd(id(i,v[j].S)));
+  }
+  REP(i,m){
+    vector<ii> v;
+    REP(j,n) v.pb({d[j][i],j});
+    sort(ALL(v));
+    REP(j,n-1)if(v[j].F < v[j+1].F) g[fd(id(v[j+1].S,i))].pb(fd(id(v[j].S,i)));
+  }
+  ll ans = 0;
+  //debug("hi");
+  REP(i,n*m){
+    if(dp[i]==-1) dfs(i);
+    chkmax(ans,dp[i]);
+  }
+  cout<<ans<<endl;
 }

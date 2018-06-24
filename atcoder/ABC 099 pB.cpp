@@ -57,5 +57,9 @@ const ll INF=(ll)1e18;
 
 int main(){
   IOS();
-  
+  ll a,b;
+  cin>>a>>b;
+  ll n = b - a;
+  ll tp = n*(n+1)/2;
+  cout<<tp - b<<endl;
 }
