@@ -1,4 +1,6 @@
 #include <bits/stdc++.h>
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
+#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
 typedef double lf;
@@ -49,51 +51,40 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e3+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-
-//    1-index  n個點   m條邊
-struct E{
-  ll to,w;
-};
-vector<E> g[MAXn];
-bool vis[MAXn];
-ll d[MAXn];
+map<char,int> t;
 int main(){
   IOS();
-  ll n,m,start,end;
-  cin>>n>>m>>start>>end;
-  REP(i,MAXn){
-    vis[i] = false;
-    d[i] = INF;
-    g[i].clear();
-  }
-  start--,end--;
-  while(m--){
-    ll a,b,w;
-    cin>>a>>b>>w;
-    a--,b--;
-    g[a].pb((E){b,w});
-  }
-  d[start] = 0;
-  REP(i,n){
-    ll tp = -1,mn = INF;
-    REP(j,n){
-      if(!vis[j] && d[j] < mn){
-        tp = j;
-        mn = d[j];
-      }
+  ll ans = 1;
+  string s;
+  cin>>s;
+  for(char i='0';i<='9';i++) t[i] = i-'0';
+  for(char i='A';i<='Z';i++) t[i] = i-55;
+  for(char i='a';i<='z';i++) t[i] = i-61;
+  char c = '-';
+  t[c] = 62;
+  c = '_';
+  t[c] = 63;
+  ll cnt = 0;
+  REP(i,SZ(s)){
+    ll tp = t[s[i]];
+    ll d[6];
+    RST(d,0);
+    int x = 0;
+    while(tp){
+      d[x++] = ((tp&1) ?1LL:0LL);
+      tp>>=1;
+      debug(tp);
     }
-    if(tp == -1) break;
-    vis[tp] = true;
-    for(E it:g[tp]){
-      ll to = it.to,w = it.w;
-      if(!vis[to] && d[to] > d[tp] + w){
-        d[to] = d[tp] + w;
-      }
+    pary(d,d+6);
+    REP(j,6)if(d[j]==0){
+      ans*=3;
+      ans%=MOD;
     }
+    debug(cnt);
   }
-  cout<<d[end]<<endl;
+  cout<<ans<<endl;
 }

@@ -11,9 +11,8 @@ typedef pair<ll,ll> ii;
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
-#define X first
-#define Y second
-#define mkp make_pair
+#define F first
+#define S second
 #define pb push_back
 #define pob pop_back
 #ifdef cold66
@@ -56,7 +55,41 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+//    1-index  n個點   m條邊
+vector<ii> g[MAXn];
+bool vis[MAXn];
+ll d[MAXn];
 int main(){
   IOS();
-
+  ll n,m,start,dst;
+  cin>>n>>m>>start>>dst;
+  REP(i,MAXn){
+    g[i].clear();
+    vis[i]=false;
+    d[i]=INF;
+  }
+  start--,dst--;
+  REP(i,m){
+    ll a,b,c;
+    cin>>a>>b>>c;
+    a--,b--;
+    g[a].pb({b,c});
+  }
+  MinHeap<ii> pq;
+  d[start] = 0;
+  pq.push({0,start});
+  REP(i,n){
+    ll tp = -1;
+    while(SZ(pq) && vis[tp = pq.top().S]) pq.pop();
+    debug(tp);
+    if(tp==-1) break;
+    vis[tp] = true;
+    for(ii it:g[tp]){
+      if(!vis[it.F] && d[it.F]>d[tp]+it.S){
+        d[it.F] = d[tp] + it.S;
+        pq.push({d[it.F],it.F});
+      }
+    }
+  }
+  cout<<d[dst]<<endl;
 }

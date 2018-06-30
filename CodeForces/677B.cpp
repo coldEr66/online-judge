@@ -11,9 +11,8 @@ typedef pair<ll,ll> ii;
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
-#define X first
-#define Y second
-#define mkp make_pair
+#define F first
+#define S second
 #define pb push_back
 #define pob pop_back
 #ifdef cold66
@@ -56,7 +55,28 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+ll vol;
+ll d[MAXn];
 int main(){
   IOS();
-
+  ll n,h,k;
+  ll ans = 0;
+  cin>>n>>h>>k;
+  REP(i,n) cin>>d[i];
+  vol = d[0];
+  for(int i=1;i<n;i++){
+    ll x = d[i];
+    ll u = h-vol;
+    ll tp = (ll)ceil((lf)(x-u)/k);
+    debug(tp);
+    if(tp<=0) vol+=x;
+    else{
+      ans+=tp;
+      vol=max(0LL,vol-tp*k);
+      vol+=x;
+    }
+    debug(vol);
+  }
+  ans+=(ll)ceil((lf)vol/k);
+  cout<<ans<<endl;
 }

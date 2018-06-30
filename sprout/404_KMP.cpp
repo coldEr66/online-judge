@@ -11,9 +11,8 @@ typedef pair<ll,ll> ii;
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
-#define X first
-#define Y second
-#define mkp make_pair
+#define F first
+#define S second
 #define pb push_back
 #define pob pop_back
 #ifdef cold66
@@ -52,11 +51,34 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e6+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+ll f[MAXn],dp[MAXn];
+ll n;
+string s;
+void build(){
+  ll cur;
+  f[0] = cur = -1;
+  REP1(i,n-1){
+    while(cur!=-1 && s[cur+1]!=s[i]) cur = f[cur];
+    if(s[cur+1]==s[i]) cur++;
+    f[i] = cur;
+  }
+}
+ll cal(ll cur){
+  if(dp[cur]!=-1) return dp[cur];
+  if(f[cur]==-1) return dp[cur] = cur;
+  if(f[cur]==0) return dp[cur] = 0;
+  return dp[cur] = min(f[cur],cal(f[cur]));
+}
 int main(){
   IOS();
-
+  cin>>n>>s;
+  RST(dp,-1);
+  build();
+  ll ans = 0;
+  REP1(i,n-1) ans+=i-cal(i);
+  cout<<ans<<endl;
 }

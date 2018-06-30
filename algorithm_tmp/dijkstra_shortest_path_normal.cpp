@@ -1,6 +1,4 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
 typedef double lf;
@@ -11,9 +9,8 @@ typedef pair<ll,ll> ii;
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
-#define X first
-#define Y second
-#define mkp make_pair
+#define F first
+#define S second
 #define pb push_back
 #define pob pop_back
 #ifdef cold66
@@ -52,11 +49,51 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e3+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
+
+  //    1-index  n個點   m條邊
+struct E{
+  ll to,w;
+};
+vector<E> g[MAXn];
+bool vis[MAXn];
+ll d[MAXn];
 int main(){
   IOS();
-
+  ll n,m,start,dst;
+  cin>>n>>m>>start>>dst;
+  REP(i,MAXn){
+    vis[i] = false;
+    d[i] = INF;
+    g[i].clear();
+  }
+  start--,dst--;
+  while(m--){
+    ll a,b,w;
+    cin>>a>>b>>w;
+    a--,b--;
+    g[a].pb((E){b,w});
+  }
+  d[start] = 0;
+  REP(i,n){
+    ll tp = -1,mn = INF;
+    REP(j,n){
+      if(!vis[j] && d[j] < mn){
+        tp = j;
+        mn = d[j];
+      }
+    }
+    if(tp == -1) break;
+    vis[tp] = true;
+    for(E it:g[tp]){
+      ll to = it.to,w = it.w;
+      if(!vis[to] && d[to] > d[tp] + w){
+        d[to] = d[tp] + w;
+      }
+    }
+  }
+  cout<<d[dst]<<endl;
 }

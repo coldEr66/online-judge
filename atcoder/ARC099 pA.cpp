@@ -58,5 +58,12 @@ const ll INF=(ll)1e18;
 
 int main(){
   IOS();
-
+  ll n,k;
+  cin>>n>>k;
+  REP(i,n){
+    ll t;
+    cin>>t;
+  }
+  ll ans = (n-2)/(k-1)+1;
+  cout<<ans<<endl;
 }

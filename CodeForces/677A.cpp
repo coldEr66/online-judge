@@ -11,9 +11,8 @@ typedef pair<ll,ll> ii;
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
-#define X first
-#define Y second
-#define mkp make_pair
+#define F first
+#define S second
 #define pb push_back
 #define pob pop_back
 #ifdef cold66
@@ -58,5 +57,14 @@ const ll INF=(ll)1e18;
 
 int main(){
   IOS();
-
+  ll n,h;
+  cin>>n>>h;
+  ll ans = 0;
+  REP(i,n){
+    ll tp;
+    cin>>tp;
+    ans++;
+    if(tp>h) ans++;
+  }
+  cout<<ans<<endl;
 }
