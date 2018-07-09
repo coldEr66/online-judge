@@ -1,42 +1,34 @@
-#include <bits/stdc++.h>
-#include "lib1168.h"
+#include <queue>
+#include <utility>
+#include <bitset>
+//#include "lib1168.h"
 using namespace std;
+typedef pair<int,int> ii;
 
-map<int,int> cnt;
-priority_queue<int> mxpq;
-priority_queue<int,vector<int>,greater<int>> mnpq;
+priority_queue<ii> mxpq;
+priority_queue<ii,vector<ii>,greater<ii>> mnpq;
+bitset<1000005> ok;
+int cnt;
 void pop_big(){
-  while(!cnt[mxpq.top()]) mxpq.pop();
-  cnt[mxpq.top()]--;
+  while(ok[mxpq.top().second]) mxpq.pop();
+  ok[mxpq.top().second] = 1;
   mxpq.pop();
 }
 void pop_small(){
-  while(!cnt[mnpq.top()]) mnpq.pop();
-  cnt[mnpq.top()]--;
+  while(ok[mnpq.top().second]) mnpq.pop();
+  ok[mnpq.top().second] = 1;
   mnpq.pop();
 }
 void push(int s){
-  cnt[s]++;
-  mxpq.push(s);
-  mnpq.push(s);
+  mnpq.push({s,cnt});
+  mxpq.push({s,cnt});
+  ++cnt;
 }
 int big(){
-  while(!cnt[mxpq.top()]) mxpq.pop();
-  return mxpq.top();
+  while(ok[mxpq.top().second]) mxpq.pop();
+  return mxpq.top().first;
 }
 int small(){
-  while(!cnt[mnpq.top()]) mnpq.pop();
-  return mnpq.top();
+  while(ok[mnpq.top().second]) mnpq.pop();
+  return mnpq.top().first;
 }
-/*
-int main(){
-  int x,y;
-  while(cin>>x>>y){
-    if(x==0) pop_big();
-    else if(x==1) pop_small();
-    else if(x==2) push(y);
-    else if(x==3) cout<<big()<<endl;
-    else cout<<small()<<endl;
-  }
-}
-*/
