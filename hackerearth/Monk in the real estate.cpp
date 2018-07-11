@@ -56,7 +56,21 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+bitset<10005> exi;
 int main(){
   IOS();
-  
+  ll t;
+  cin>>t;
+  while(t--){
+    ll ans = 0;
+    exi.reset();
+    ll n; cin>>n;
+    while(n--){
+      ll a,b;
+      cin>>a>>b;
+      if(!exi[a]) ans++,exi[a] = 1;
+      if(!exi[b]) ans++,exi[b] = 1;
+    }
+    cout<<ans<<'\n';
+  }
 }

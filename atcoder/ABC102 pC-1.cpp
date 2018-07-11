@@ -15,7 +15,6 @@ typedef pair<ll,ll> ii;
 #define Y second
 #define mkp make_pair
 #define pb push_back
-#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -43,6 +42,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +52,28 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=2e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=(ll)1e18;
 
+ll n;
+ll d[MAXn],a[MAXn];
+ll cal(ll b){
+  ll ret=0;
+  REP(i,n) ret+=abs(a[i]-(b+i+1));
+  return ret;
+}
 int main(){
   IOS();
-  
+  cin>>n;
+  REP(i,n){
+    cin>>a[i];
+    d[i] = a[i]-i-1;
+  }
+  sort(d,d+n);
+  pary(d,d+n);
+  ll tp = n/2;
+  debug(tp);
+  ll ans = min(cal(d[tp]),cal(d[tp-1]));
+  cout<<ans<<endl;
 }

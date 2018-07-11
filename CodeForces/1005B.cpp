@@ -58,5 +58,14 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  string a,b;
+  cin>>a>>b;
+  if(a==b) return cout<<0<<'\n',0;
+  ll l=SZ(a)-1,r=SZ(b)-1;
+  while(a[l]==b[r] && l>=0 && r>=0){
+    l--,r--;
+  }
+  debug(l,r);
+  ll ans = (l+1) + (r+1);
+  cout<<ans<<'\n';
 }

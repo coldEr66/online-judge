@@ -4,7 +4,7 @@
 using namespace std;
 typedef long long ll;
 typedef double lf;
-typedef pair<ll,ll> ii;
+typedef pair<int,int> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
 #define REP1(i,n) for(ll i=1;i<=n;i++)
 #define FOR(i,j,n,m) for(int i=j;i<n;i+=m)
@@ -54,9 +54,34 @@ template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=0x3f3f3f3f;
 
+vector<ii> v;
+vector<ll> dt;
+bool cmp(ii a,ii b){
+  if(a.X!=b.X) return a.X<b.X;
+  else return a.Y>b.Y;
+}
 int main(){
   IOS();
-  
+  int t;
+  cin>>t;
+  while(t--){
+    dt.clear();
+    v.clear();
+    int n;
+    cin>>n;
+    REP(i,n){
+      int a,b;
+      cin>>a>>b;
+      v.eb(mkp(a,b));
+    }
+    sort(ALL(v),cmp);
+    dt.eb(v[0].Y);
+    REP1(i,n-1){
+      if(v[i].Y>dt.back()) dt.eb(v[i].Y);
+      else *lower_bound(ALL(dt),v[i].Y) = v[i].Y;
+    }
+    cout<<SZ(dt)<<'\n';
+  }
 }

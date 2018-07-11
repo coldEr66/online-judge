@@ -15,7 +15,6 @@ typedef pair<ll,ll> ii;
 #define Y second
 #define mkp make_pair
 #define pb push_back
-#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -43,6 +42,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -54,9 +54,36 @@ template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=(ll)1e18;
 
+vector<ll> g1[MAXn],g2[MAXn];
+ll vis[MAXn];
+vector<ll> topo;
+ll scc[MAXn];
+void dfs1(ll cur){
+  vis[cur] = 1;
+  for(ll it:g1[cur])if(!vis[it]) dfs1(it);
+  topo.pb(cur);
+}
+void dfs2(ll cur,ll cnt){
+  scc[cur] = cnt;
+  vis[cur] = 1;
+  for(ll it:g2[cur])if(!vis[it]) dfs2(it,cnt);
+}
 int main(){
   IOS();
-  
+  ll n,m;
+  cin>>n>>m;
+  REP(i,m){
+    ll a,b;
+    cin>>a>>b;
+    a--,b--;
+    g1[a].pb(b);
+    g2[b].pb(a);
+  }
+  REP(i,n)if(!vis[i]) dfs1(i);
+  RST(vis,0);
+  ll cnt = 0;
+  reverse(ALL(topo));
+  REP(i,n)if(!vis[topo[i]]) dfs2(topo[i],cnt++);
 }

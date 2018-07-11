@@ -56,7 +56,22 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+vector<ll> ans;
 int main(){
   IOS();
-  
+  ll n;
+  cin>>n;
+  ll l=-1;
+  REP(i,n){
+    ll x; cin>>x;
+    if(x==1) ans.eb(l);
+    if(i==n-1) ans.eb(x);
+    l=x;
+  }
+  cout<<SZ(ans)-1<<'\n';
+  REP1(i,SZ(ans)-1){
+    if(i!=1) cout<<' ';
+    cout<<ans[i];
+  }
+  cout<<'\n';
 }

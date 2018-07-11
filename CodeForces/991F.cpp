@@ -56,7 +56,84 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll s;
+string ans;
+ll dp[11];
+map<ll,string> mp;
+set<ll> st[11];
+string tostr(ll n){
+  string ret = "";
+  while(n){
+    ret+=(char)((n%10)+'0');
+    n/=10;
+  }
+  reverse(ALL(ret));
+  return ret;
+}
+void chk(ll cur,string x){
+  if(cur>s || SZ(x)>=SZ(tostr(cur))) return;
+  if(mp.count(cur) && SZ(mp[cur])<=SZ(x)) return;
+  st[SZ(mp[cur])].erase(cur);
+  mp[cur] = x;
+  st[SZ(x)].insert(cur);
+}
+string gt(ll n){
+  if(mp.count(n)) return mp[n];
+  return tostr(n);
+}
+void p(){
+  for(ll i=2;i*i<=s;i++){
+    ll tp = i*i;
+    ll ex = 2;
+    while(tp<=s){
+      string tmp = tostr(i)+"^"+tostr(ex);
+      chk(tp,tmp);
+      tp*=i;
+      ex++;
+    }
+  }
+}
+void pp(ll len){
+  REP1(i,len){
+    for(ll j=i;i+j+1<=len;j++){
+      for(auto it1:st[i])for(auto it2:st[j]) chk(it1*it2,gt(it1)+"*"+gt(it2));
+    }
+  }
+}
+void ap(ll len){
+  for(int i=1;i+2<=len;i++){
+    for(ll j=1;j<dp[len-i-1];j++){
+      for(auto it:st[i]) chk(j*it,tostr(j)+"*"+gt(it));
+    }
+  }
+}
+void build(){
+  dp[0] = 1;
+  REP1(i,10) dp[i] = dp[i-1]*10;
+  p();
+  pp(7);
+  ap(7);
+}
+void upd(string r){
+  if(SZ(ans)>SZ(r)) ans = r;
+}
+void sol(){
+  for(int i=1;i*2+1<SZ(ans);i++){
+    for(ll j=1;j<=dp[i];j++){
+      upd(gt(s-j)+"+"+gt(j));
+      if(s%j==0) upd(gt(s/j)+"*"+gt(j));
+    }
+    for(auto j:st[i]){
+      upd(gt(s-j)+"+"+gt(j));
+      if(s%j==0) upd(gt(s/j)+"*"+gt(j));
+    }
+  }
+}
 int main(){
   IOS();
-  
+  cin>>s;
+  build();
+  ans = gt(s);
+  sol();
+  cout<<ans<<endl;
 }

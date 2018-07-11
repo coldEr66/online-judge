@@ -15,7 +15,6 @@ typedef pair<ll,ll> ii;
 #define Y second
 #define mkp make_pair
 #define pb push_back
-#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -43,6 +42,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +52,51 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e4+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=(ll)1e18;
 
+ll f[MAXn];
+void build(string s){
+  ll cur = f[0] = -1;
+  REP1(i,SZ(s)-1){
+    while(cur!=-1 && s[cur+1]!=s[i]) cur = f[cur];
+    if(s[cur+1]==s[i]) cur++;
+    f[i] = cur;
+  }
+}
 int main(){
   IOS();
-  
+  ll t;
+  cin>>t;
+  while(t--){
+    string s;
+    cin>>s;
+    ll q;
+    cin>>q;
+    while(q--){
+      RST(f,0);
+      string tmp;
+      cin>>tmp;
+      build(tmp);
+      ll cur = -1;
+      ll ans = 0;
+      debug(s,tmp);
+      REP(i,SZ(s)){
+        debug("hi",i);
+        while(cur!=-1 && tmp[cur+1]!=s[i]){
+          cur = f[cur];
+          debug(cur);
+        }
+        if(tmp[cur+1]==s[i]) cur++;
+        if(!tmp[cur+1]){
+          ans++;
+          cur = f[cur];
+        }
+        debug("hello");
+      }
+      debug("heloo");
+      cout<<ans<<endl;
+    }
+  }
 }

@@ -15,7 +15,6 @@ typedef pair<ll,ll> ii;
 #define Y second
 #define mkp make_pair
 #define pb push_back
-#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -43,6 +42,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -54,9 +54,24 @@ template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=(ll)1e18;
 
+map<string,ll> cnta,cntb;
 int main(){
   IOS();
-  
+  ll n;
+  cin>>n;
+  ll ans = n;
+  REP(i,n){
+    string s;
+    cin>>s;
+    cnta[s]++;
+  }
+  REP(i,n){
+    string s;
+    cin>>s;
+    cntb[s]++;
+  }
+  for(auto it:cnta) ans-=min(it.Y,cntb[it.X]);
+  cout<<ans<<endl;
 }

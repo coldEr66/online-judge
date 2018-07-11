@@ -52,11 +52,27 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=3e2+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll dp[MAXn][MAXn];
+ll tdp[MAXn][MAXn];
+vector<ii> l[MAXn*MAXn];
 int main(){
   IOS();
-  
+  ll n,m,p;
+  cin>>n>>m>>p;
+  REP(i,n)REP(j,m) dp[i][j] = INF , tdp[i][j] = INF;
+  REP(i,n)REP(j,m){
+    ll x; cin>>x;
+    l[x].eb(mkp(i,j));
+  }
+  for(auto it:l[1]) dp[it.X][it.Y] = it.X+it.Y;
+  for(int lev=2;lev<=p;lev++){
+    for(auto it:l[lev-1])REP(i,n) tdp[i][it.Y] = min(tdp[i][it.Y],dp[it.X][it.Y] + abs(i-it.X));
+    for(auto it:l[lev])REP(j,m) dp[it.X][it.Y] = min(dp[it.X][it.Y],tdp[it.X][j] + abs(j-it.Y));
+    for(auto it:l[lev-1])REP(i,n) tdp[i][it.Y] = INF;
+  }
+  cout<<dp[l[p][0].X][l[p][0].Y]<<'\n';
 }

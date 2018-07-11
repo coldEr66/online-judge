@@ -43,6 +43,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +53,38 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=55,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+pair<ll,string> d[MAXn];
+vector<pair<ll,string> > dt;
+ll ca;
 int main(){
+  freopen("tourist.txt","r",stdin);
+  freopen("opt","w",stdout);
   IOS();
-  
+  ll t;
+  cin>>t;
+  while(t--){
+    dt.clear();
+    ll n,k,v;
+    cin>>n>>k>>v;
+    REP(i,n){
+      string s;
+      cin>>s;
+      d[i] = mkp(i+1,s);
+    }
+    v--;
+    ll tmp = (v*k)%n;
+    while(k--){
+      dt.eb(d[tmp]);
+      tmp++;
+      if(tmp>=n) tmp-=n;
+    }
+    sort(ALL(dt));
+    cout<<"Case #"<<++ca<<":";
+    REP(i,SZ(dt)) cout<<' '<<dt[i].Y;
+    cout<<endl;
+  }
 }

@@ -52,11 +52,52 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e3+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=0x3f3f3f3f;
 
+ll n,m,s,t;
+bool adj[MAXn][MAXn];
+void BFS(ll *d,ll st){
+  queue<ll> q;
+  q.push(st);
+  d[st] = 0;
+  while(SZ(q)){
+    ll cur = q.front();
+    q.pop();
+    REP(i,n)if(adj[cur][i]){
+      if(d[i]>d[cur]+1){
+        d[i] = d[cur] + 1;
+        q.push(i);
+      }
+    }
+  }
+}
+ll d1[MAXn],d2[MAXn];
 int main(){
   IOS();
-  
+  cin>>n>>m>>s>>t;
+  s--,t--;
+  REP(i,m){
+    ll a,b;
+    cin>>a>>b;
+    a--,b--;
+    adj[a][b] = adj[b][a] = 1;
+  }
+  RST(d1,INF);
+  RST(d2,INF);
+  BFS(d1,s);
+  BFS(d2,t);
+  pary(d1,d1+n);
+  pary(d2,d2+n);
+  ll ans = d1[t];
+  ll cnt = 0;
+  REP(i,n)for(int j=i+1;j<n;j++){
+    if(i==j) continue;
+    if(adj[i][j]) continue;
+    if(d1[i]+d2[j]+1<ans || d1[j]+d2[i]+1<ans) adj[i][j] = adj[j][i] = 1;
+    else cnt++;
+    debug(i,j,cnt);
+  }
+  cout<<cnt<<endl;
 }

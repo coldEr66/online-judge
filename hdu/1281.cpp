@@ -15,7 +15,6 @@ typedef pair<ll,ll> ii;
 #define Y second
 #define mkp make_pair
 #define pb push_back
-#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -43,6 +42,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +52,57 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e2+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll n,m,k;
+ll yp[MAXn];
+bool vis[MAXn];
+vector<ii> v;
+bool e[MAXn][MAXn];
+bool dfs(ll cur){
+  REP(i,m){
+    if(e[cur][i] && !vis[i]){
+      vis[i] = true;
+      if(yp[i]==-1 || dfs(yp[i])){
+        yp[i] = cur;
+        return true;
+      }
+    }
+  }
+  return false;
+}
+ll sol(){
+  ll ret = 0;
+  RST(yp,-1);
+  REP(i,n){
+    RST(vis,0);
+    if(dfs(i)) ret++;
+  }
+  return ret;
+}
 int main(){
   IOS();
-  
+  ll t=1;
+  while(cin>>n>>m>>k){
+    v.clear();
+    RST(e,0);
+    REP(i,k){
+      ll a,b;
+      cin>>a>>b;
+      a--,b--;
+      e[a][b] = true;
+      v.pb({a,b});
+    }
+    ll ans = sol();
+    ll cnt = 0;
+    REP(i,k){
+      e[v[i].X][v[i].Y] = false;
+      ll tmp = sol();
+      if(tmp<ans) cnt++;
+      e[v[i].X][v[i].Y] = true;
+    }
+    cout<<"Board "<<t++<<" have "<<cnt<<" important blanks for "<<ans<<" chessmen."<<endl;
+  }
 }

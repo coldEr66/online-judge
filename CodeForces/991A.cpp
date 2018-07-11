@@ -58,5 +58,12 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  ll a,b,c,n;
+  cin>>a>>b>>c>>n;
+  a-=c; b-=c;
+  if(a<0 || b<0) return cout<<-1<<'\n',0;
+  ll tmp = a+b+c;
+  ll ans = n-tmp;
+  if(ans<=0) return cout<<-1<<'\n',0;
+  cout<<ans<<endl;
 }

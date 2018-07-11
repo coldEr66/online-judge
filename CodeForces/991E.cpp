@@ -56,7 +56,47 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+set<string> st;
+ll ok[26],tp[26];
+ll dp[20];
+void build(){
+  dp[0] = dp[1] = 1;
+  for(int i=2;i<20;i++) dp[i] = dp[i-1]*i;
+}
+ll cal(string cur){
+  RST(tp,0);
+  sort(ALL(cur));
+  ll len = SZ(cur);
+  REP(i,len) tp[cur[i]-'0']++;
+  REP(i,10)if(ok[i] && !tp[i]) return 0;
+  if(st.count(cur)) return 0;
+  st.insert(cur);
+  debug(st);
+  ll ret = 0;
+  ret = dp[len];
+  debug(ret);
+  REP(i,10) ret/=dp[tp[i]];
+  if(tp[0]>0){
+    tp[0]--;
+    ll tmp = dp[len-1];
+    REP(i,10) tmp/=dp[tp[i]];
+    ret-=tmp;
+  }
+  return ret;
+}
 int main(){
   IOS();
-  
+  string s; cin>>s;
+  ll n = SZ(s);
+  ll ans = 0;
+  build();
+  pary(dp,dp+20);
+  REP(i,n) ok[s[i]-'0']++;
+  for(int i=1;i<(1<<n);i++){
+    string tmp = "";
+    REP(j,n)if(i&(1<<j)) tmp+=s[j];
+    debug(tmp);
+    ans+=cal(tmp);
+  }
+  cout<<ans<<endl;
 }

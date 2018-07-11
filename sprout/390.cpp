@@ -15,7 +15,6 @@ typedef pair<ll,ll> ii;
 #define Y second
 #define mkp make_pair
 #define pb push_back
-#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -43,6 +42,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +52,48 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e6+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=(ll)1e18;
 
+MinHeap<ii> pq;
+ll c[55],d[100005];
+ll dis[MAXn];
+bool vis[MAXn];
 int main(){
   IOS();
-  
+  ll t;
+  cin>>t;
+  while(t--){
+    REP(i,MAXn) dis[i] = INF;
+    RST(vis,0);
+    while(SZ(pq)) pq.pop();
+    ll n,m;
+    cin>>n>>m;
+    REP(i,n) cin>>c[i];
+    REP(i,m) cin>>d[i];
+    sort(c,c+n);
+    dis[0] = 0;
+    pq.push({0,0});
+    ll mod = c[0];
+    REP(i,mod){
+      ll tp = -1;
+      while(SZ(pq) && vis[tp = pq.top().Y]) pq.pop();
+      if(tp==-1) break;
+      vis[tp] = true;
+      REP(j,n){
+        ll to = (tp + c[j])%mod;
+        if(!vis[to] && dis[to]>dis[tp]+c[j]){
+          dis[to] = dis[tp]+c[j];
+          pq.push({dis[to],to});
+        }
+      }
+    }
+    REP(i,m){
+      ll tmp = d[i]%mod;
+      if(dis[tmp]<=d[i]) cout<<'Y';
+      else cout<<'N';
+    }
+    cout<<endl;
+  }
 }

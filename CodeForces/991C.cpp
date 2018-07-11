@@ -56,7 +56,33 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll n;
+ll sol(ll x){
+  ll ret = 0;
+  ll tmp = n;
+  while(tmp-x>=0){
+    tmp-=x;
+    ret+=x;
+    tmp-=tmp/10;
+  }
+  ret+=tmp;
+  debug(ret,x);
+  return ret;
+}
 int main(){
   IOS();
-  
+  cin>>n;
+  if(n<12) return cout<<1<<'\n',0;
+  ll lim;
+  if(n&1) lim = n/2+1;
+  else lim = n/2;
+  ll l=1,r=lim;
+  while(l!=r-1){
+    ll mid = (l+r)/2;
+    if(sol(mid)>=lim) r = mid;
+    else l = mid;
+  }
+  debug(l,r);
+  if(sol(l)>=lim) cout<<l<<'\n';
+  else cout<<r<<'\n';
 }

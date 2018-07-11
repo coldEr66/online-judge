@@ -15,7 +15,6 @@ typedef pair<ll,ll> ii;
 #define Y second
 #define mkp make_pair
 #define pb push_back
-#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -43,6 +42,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -54,9 +54,50 @@ template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
-
+const ll INF=(ll)1e18;
+struct Trie{
+  map<int,Trie*> dt;
+  int id;
+  Trie(){
+    dt.clear();
+    id = 0;
+  }
+};
+int idx;
+pair<bool,int> dfs(string s,Trie* tmp){
+  Trie* cur = tmp;
+  int i = 0;
+  while(i<SZ(s)){
+    if(!cur->dt[s[i]-'a']) cur->dt[s[i]-'a'] = new Trie();
+    cur = cur->dt[s[i]-'a'];
+    if(i==SZ(s)-1){
+      if(cur->id) return {true,cur->id};
+      else{
+        cur->id = ++idx;
+        return {false,cur->id};
+      }
+    }
+    i++;
+  }
+}
+void del(Trie* tmp){
+  debug("hi");
+  for(auto it:tmp->dt) del(it.Y);
+  delete tmp;
+}
 int main(){
   IOS();
-  
+  int n;
+  while(cin>>n){
+    Trie *root = new Trie();
+    idx = 0;
+    REP(i,n){
+      string s;
+      cin>>s;
+      pair<bool,int> tmp = dfs(s,root);
+      if(tmp.X) cout<<"Old! "<<tmp.Y<<endl;
+      else cout<<"New! "<<tmp.Y<<endl;
+    }
+    del(root);
+  }
 }

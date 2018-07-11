@@ -58,5 +58,12 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  ll n; cin>>n;
+  ll sum = 0;
+  REP(i,n){
+    ll x; cin>>x;
+    sum+=x;
+  }
+  if(sum==(n-1)*2) cout<<"Yes"<<'\n';
+  else cout<<"No"<<'\n';
 }

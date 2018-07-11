@@ -56,7 +56,47 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ii c[34];
+ll ma = -1;
+ll sol(ll x){
+  ll ret = 0;
+  for(int i=ma;i>=0;i--){
+    if(c[i].Y>x) continue;
+    ll ct = x/c[i].Y;
+    debug(ct);
+    if(c[i].Y*c[i].X>=ct*c[i].Y){
+      x-=ct*c[i].Y;
+      ret+=ct;
+    }
+    else{
+      x-=c[i].Y*c[i].X;
+      ret+=c[i].X;
+    }
+  }
+  debug(x);
+  if(x==0) return ret;
+  else return INF;
+}
 int main(){
   IOS();
-  
+  ll n,q;
+  cin>>n>>q;
+  REP(i,n){
+    ll x; cin>>x;
+    ll tmp = __lg(x);
+    ma = max(ma,tmp);
+    c[tmp].X++;
+  }
+  debug(ma);
+  c[0].Y = 1;
+  REP1(i,ma) c[i].Y = c[i-1].Y*2;
+  REP(i,ma+1){
+    debug(c[i].X,c[i].Y);
+  }
+  while(q--){
+    ll x; cin>>x;
+    ll ans = sol(x);
+    if(ans==INF) cout<<-1<<endl;
+    else cout<<ans<<endl;
+  }
 }

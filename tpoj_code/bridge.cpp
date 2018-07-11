@@ -15,7 +15,6 @@ typedef pair<ll,ll> ii;
 #define Y second
 #define mkp make_pair
 #define pb push_back
-#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -43,6 +42,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +52,50 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e3+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=(ll)1e18;
 
+ll n,m;
+vector<ii> g[MAXn];
+ll low[MAXn],vis[MAXn];
+ll e[MAXn][MAXn];
+ll t;
+ll ans;
+void dfs(ll cur,ll fa){
+  vis[cur] = low[cur] = ++t;
+  for(ii it:g[cur]){
+    if(it.X==-1) continue;
+    if(!vis[it.X]){
+      dfs(it.X,cur);
+      chkmin(low[cur],low[it.X]);
+      if(low[it.X]>vis[cur]) chkmin(ans,e[it.X][cur]);
+    }
+    else if(it.X!=fa) chkmin(low[cur],low[it.X]);
+  }
+}
 int main(){
   IOS();
-  
+  REP(i,n) g[i].clear();
+  RST(low,0);
+  RST(vis,0);
+  REP(i,MAXn)REP(j,MAXn) e[i][j] = INF;
+  t = 0,ans = INF;
+  REP(i,m){
+    ll a,b,v;
+    cin>>a>>b>>v;
+    a--,b--;
+    if(e[a][b]==INF){
+      g[a].pb({b,v});
+      g[b].pb({a,v});
+      e[a][b] = e[b][a] = v;
+    }
+    else e[a][b] = e[b][a] = INF;
+  }
+  ll cnt = 0;
+  REP(i,n)if(!vis[i]) cnt++,dfs(i,i);
+  if(cnt!=1) cout<<0<<endl;
+  else if(ans==INF) cout<<-1<<endl;
+  else if(ans==0) cout<<2<<endl;
+  else cout<<ans+1<<endl;
 }

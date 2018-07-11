@@ -52,11 +52,61 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const int MAXn=2e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const int INF=0x3f3f3f3f;
 
+int n,m,k;
+int dis[MAXn];
+vector<int> adj[MAXn],fa[MAXn];
+vector<string> ans;
+void build(){
+  queue<int> q;
+  q.push(0);
+  dis[0] = 0;
+  while(SZ(q)){
+    int cur = q.front();
+    q.pop();
+    for(auto it:adj[cur]){
+      if(dis[it]>=0) continue;
+      dis[it] = dis[cur]+1;
+      q.push(it);
+    }
+  }
+}
+void dfs(int cur,string &s){
+  if(SZ(ans)>=k) return;
+  if(cur==n){
+    ans.eb(s);
+    return;
+  }
+  for(auto it:fa[cur]){
+    s[it] = '1';
+    dfs(cur+1,s);
+    s[it] = '0';
+    if(SZ(ans)>=k) return;
+  }
+}
 int main(){
   IOS();
-  
+  cin>>n>>m>>k;
+  vector<int> u(m),v(m);
+  RST(dis,-1);
+  REP(i,m){
+    cin>>u[i]>>v[i];
+    u[i]--,v[i]--;
+    adj[u[i]].eb(v[i]);
+    adj[v[i]].eb(u[i]);
+  }
+  build();
+  pary(dis,dis+n);
+  REP(i,m){
+    if(dis[u[i]]==dis[v[i]]) continue;
+    if(dis[u[i]]<dis[v[i]]) fa[v[i]].eb(i);
+    else fa[u[i]].eb(i);
+  }
+  string s(m,'0');
+  dfs(1,s);
+  cout<<SZ(ans)<<'\n';
+  REP(i,SZ(ans)) cout<<ans[i]<<'\n';
 }

@@ -52,11 +52,46 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e6+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll n,m;
+vector<ll> g1[MAXn],g2[MAXn];
+ll vis[MAXn];
+ll scc[MAXn];
+vector<ll> topo;
+void dfs1(ll cur){
+  vis[cur] = 1;
+  for(ll it:g1[cur]){
+    if(!vis[it])dfs1(it);
+  }
+  topo.eb(cur);
+}
+void dfs2(ll cur,ll cnt){
+  vis[cur] = 1;
+  scc[cnt]++;
+  debug(cnt,cur);
+  for(ll it:g2[cur]){
+    if(!vis[it]) dfs2(it,cnt);
+  }
+}
 int main(){
   IOS();
-  
+  cin>>n>>m;
+  REP(i,m){
+    ll a,b;
+    cin>>a>>b;
+    g1[a].eb(b);
+    g2[b].eb(a);
+  }
+  REP(i,n)if(!vis[i]) dfs1(i);
+  RST(vis,0);
+  ll cnt = 0;
+  for(int i=n-1;i>=0;i--){
+    if(!vis[topo[i]]) dfs2(topo[i],cnt++);
+  }
+  ll ans = 0;
+  REP(i,cnt) chkmax(ans,scc[i]);
+  cout<<ans<<endl;
 }

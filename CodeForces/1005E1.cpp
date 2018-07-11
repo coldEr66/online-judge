@@ -52,11 +52,37 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=2e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll d[MAXn];
+map<ll,ll> mp;
 int main(){
   IOS();
-  
+  ll n,m;
+  ll pos;
+  cin>>n>>m;
+  REP(i,n){
+    cin>>d[i];
+    if(d[i]==m) pos = i;
+  }
+  ll tmp = 0;
+  for(int i=pos;i<n;i++){
+    tmp += (d[i]>d[pos]) - (d[i]<d[pos]);
+    if(!mp.count(tmp)) mp[tmp] = 1;
+    else mp[tmp]++;
+  }
+  ll ans = 0;
+  tmp = 0;
+  for(int i=pos;i>=0;i--){
+    tmp += (d[i]>d[pos]) - (d[i]<d[pos]);
+    if(mp.count(-tmp)) ans+=mp[-tmp];
+  }
+  tmp = 0;
+  for(int i=pos;i>=0;i--){
+    tmp += (d[i]>d[pos]) - (d[i]<d[pos]);
+    if(mp.count(1-tmp)) ans+=mp[1-tmp];
+  }
+  cout<<ans<<'\n';
 }

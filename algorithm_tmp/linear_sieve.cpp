@@ -15,7 +15,6 @@ typedef pair<ll,ll> ii;
 #define Y second
 #define mkp make_pair
 #define pb push_back
-#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -43,6 +42,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +52,26 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e7+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=(ll)1e18;
 
+ll ok[MAXn];
+vector<ll> prime;
 int main(){
   IOS();
-  
+  ll n;
+  cin>>n;
+  for(int i=2;i<n;i++){
+    if(!ok[i]) prime.pb(i);
+    for(int j=0;i*prime[j]<n;j++){
+      ok[i*prime[j]] = true;
+      if(i%prime[j]==0) break;
+    }
+  }
+  REP(i,SZ(prime)){
+    if(i!=0) cout<<' ';
+    cout<<prime[i];
+  }
+  cout<<endl;
 }

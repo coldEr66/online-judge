@@ -52,11 +52,38 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=4e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=0x3f3f3f3f3f;
 
+ll deg[MAXn];
+vector<ii> ans;
+MinHeap<ii> pq;
 int main(){
   IOS();
-  
+  ll n,d,k;
+  cin>>n>>d>>k;
+  if(d>=n) return cout<<"NO"<<'\n',0;
+  REP1(i,n) deg[i] = k;
+  REP1(i,d){
+    ans.eb(mkp(i,i+1));
+    deg[i]--,deg[i+1]--;
+    if(deg[i]<0 || deg[i+1]<0) return cout<<"NO"<<'\n',0;
+  }
+  REP1(i,d+1) pq.push(mkp(max(i-1,d-i+1),i));
+  for(ll i=d+2;i<=n;i++){
+    while(SZ(pq) && deg[pq.top().Y]<=0) pq.pop();
+    debug(pq.top().X,pq.top().Y);
+    if(!SZ(pq) || pq.top().X>=d) return cout<<"NO"<<'\n',0;
+    deg[i]--,deg[pq.top().Y]--;
+    debug(deg[i],i,deg[pq.top().Y],pq.top().Y);
+    ans.eb(mkp(i,pq.top().Y));
+    pq.push(mkp(pq.top().X+1,i));
+  }
+  debug(SZ(ans));
+  if(SZ(ans)==n-1){
+    cout<<"YES"<<'\n';
+    for(ii it:ans) cout<<it.X<<' '<<it.Y<<endl;
+  }
+  else cout<<"NO"<<'\n';
 }

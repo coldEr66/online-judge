@@ -58,5 +58,12 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  ll n; cin>>n;
+  ll ans = -1;
+  REP(i,n){
+    ll x; cin>>x;
+    if(ans==-1) ans = x;
+    else ans = __gcd(ans,x);
+  }
+  cout<<ans<<'\n';
 }

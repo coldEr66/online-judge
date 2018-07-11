@@ -15,7 +15,6 @@ typedef pair<ll,ll> ii;
 #define Y second
 #define mkp make_pair
 #define pb push_back
-#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -43,6 +42,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -54,9 +54,45 @@ template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=(ll)1e18;
 
+ll d[MAXn];
+ll dp[MAXn];
 int main(){
   IOS();
-  
+  ll n;
+  ll sum = 0;
+  cin>>n;
+  REP(i,n){
+    cin>>d[i];
+    sum+=d[i];
+    dp[i]=dp[i-1]+d[i];
+  }
+  sum/=4;
+  debug(sum);
+  ll a=-1,b=-1,c=-1;
+  ll tp = 0;
+  ll x = 0;
+  REP(i,n){
+    tp+=d[i];
+    if(a==-1 && abs(tp-sum)==0) a=i,tp=0,x=0;
+    else if(b==-1 && abs(tp-sum)==0) b=i,tp=0,x=0;
+    else if(c==-1 && abs(tp-sum)==0) c=i,tp=0,x=0;
+    if(a==-1 && abs(tp-sum)>abs(x-sum)) c=i-1,tp=0,x=0;
+    else if(b==-1 && abs(tp-sum)>abs(x-sum)) c=i-1,tp=0,x=0;
+    else if(c==-1 && abs(tp-sum)>abs(x-sum)) c=i-1,tp=0,x=0;
+    x+=d[i];
+  }
+  debug(a,b,c);
+  ll p[4];
+  RST(p,0);
+  REP(i,n){
+    if(i<=a) p[0]+=d[i];
+    else if(i<=b) p[1]+=d[i];
+    else if(i<=c) p[2]+=d[i];
+    else p[3]+=d[i];
+  }
+  pary(p,p+4);
+  sort(p,p+4);
+  cout<<p[3]-p[0]<<endl;
 }

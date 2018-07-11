@@ -57,7 +57,14 @@ const ll INF=(ll)1e18;
 
 ll f[MAXn],dp[MAXn];
 ll n;
+ll ans;
 string s;
+ll cal(ll cur){
+  if(dp[cur]!=-1) return dp[cur];
+  if(f[cur]==-1) return dp[cur] = cur;
+  if(f[cur]==0) return dp[cur] = 0;
+  return dp[cur] = min(f[cur],cal(f[cur]));
+}
 void build(){
   ll cur;
   f[0] = cur = -1;
@@ -65,20 +72,13 @@ void build(){
     while(cur!=-1 && s[cur+1]!=s[i]) cur = f[cur];
     if(s[cur+1]==s[i]) cur++;
     f[i] = cur;
+    ans+=i-cal(i);
   }
-}
-ll cal(ll cur){
-  if(dp[cur]!=-1) return dp[cur];
-  if(f[cur]==-1) return dp[cur] = cur;
-  if(f[cur]==0) return dp[cur] = 0;
-  return dp[cur] = min(f[cur],cal(f[cur]));
 }
 int main(){
   IOS();
   cin>>n>>s;
   RST(dp,-1);
   build();
-  ll ans = 0;
-  REP1(i,n-1) ans+=i-cal(i);
   cout<<ans<<endl;
 }

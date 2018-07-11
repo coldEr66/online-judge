@@ -1,6 +1,4 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
 typedef double lf;
@@ -11,11 +9,9 @@ typedef pair<ll,ll> ii;
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
-#define X first
-#define Y second
-#define mkp make_pair
+#define F first
+#define S second
 #define pb push_back
-#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -43,6 +39,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +49,40 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e6+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=(ll)1e18;
 
+//單點加值，區間詢問和
+ll d[MAXn],bit[MAXn];
+ll n,q;
+ll lowbit(ll x){return x&(-x);}
+void ins(ll pos,ll v){
+  ll j=pos;
+  while(j<=n){
+    bit[j]+=v;
+    j+=lowbit(j);
+  }
+}
+ll qr(ll x){
+  ll sum=0;
+  while(x>0){
+    sum+=bit[x];
+    x-=lowbit(x);
+  }
+  return sum;
+}
 int main(){
   IOS();
-  
+  cin>>n>>q;
+  REP1(i,n){
+    cin>>d[i];
+    ins(i,d[i]);
+  }
+  while(q--){
+    ll cmd,l,r;
+    cin>>cmd>>l>>r;
+    if(cmd==0) ins(l,r);
+    else cout<<qr(r)-qr(l-1)<<endl;
+  }
 }

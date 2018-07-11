@@ -15,7 +15,6 @@ typedef pair<ll,ll> ii;
 #define Y second
 #define mkp make_pair
 #define pb push_back
-#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -43,6 +42,7 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
+#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +52,57 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=4e3+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=(ll)1e18;
 
+ll p[MAXn],d[MAXn];
+ll dp[MAXn][MAXn];
+vector<ii> a,b;
 int main(){
   IOS();
-  
+  ll n;
+  while(cin>>n && n){
+    a.clear();
+    b.clear();
+    ll sum = 0;
+    REP(i,n){
+      cin>>p[i]>>d[i];
+      sum+=d[i];
+      if(d[i]==1) a.pb({p[i],d[i]});
+      else b.pb({p[i],d[i]});
+    }
+    if(sum<(n-1)*2){
+      cout<<-1<<endl;
+      continue;
+    }
+    sort(ALL(a));
+    sort(ALL(b));
+    ll ans = 0;
+    REP(i,SZ(b)-1){
+      ans+=abs(b[i].X-b[i+1].X);
+      dp[i+1][0] = ans;
+      b[i].Y--;
+      b[i+1].Y--;
+    }
+    ll idx = 0;
+    ll cnt = 0;
+    debug(ans);
+    REP(i,SZ(b)){
+      idx = 0;
+      REP(j,SZ(a)){
+        if(cnt>b[idx].Y){
+          idx++;
+          cnt = 0;
+        }
+        while(idx<SZ(b) && abs(b[idx].X-a[j].X)>abs(b[idx+1].X-a[j].X)){
+          idx++;
+          cnt = 0;
+        }
+        dp[i+1][j+1] = dp[i+1][j] + abs(b[idx].X-a[j].X);
+        cnt++;
+      }
+    }
+    cout<<dp[SZ(b)][SZ(a)]<<endl;
+  }
 }

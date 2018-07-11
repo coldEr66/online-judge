@@ -58,5 +58,32 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  ll a,b,x;
+  cin>>a>>b>>x;
+  string ans = "";
+  if(x%2==0){
+    if(a>b){
+      REP(i,x/2) ans+="01";
+      REP(i,b-x/2) ans+='1';
+      REP(i,a-x/2) ans+='0';
+    }
+    else{
+      REP(i,x/2) ans+="10";
+      REP(i,a-x/2) ans+='0';
+      REP(i,b-x/2) ans+='1';
+    }
+  }
+  else{
+    if(a>b){
+      REP(i,x/2) ans+="01";
+      REP(i,a-x/2) ans+='0';
+      REP(i,b-x/2) ans+='1';
+    }
+    else{
+      REP(i,x/2) ans+="10";
+      REP(i,b-x/2) ans+='1';
+      REP(i,a-x/2) ans+='0';
+    }
+  }
+  cout<<ans<<'\n';
 }
