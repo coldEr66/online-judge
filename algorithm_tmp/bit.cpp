@@ -79,6 +79,7 @@ int main(){
     cin>>d[i];
     ins(i,d[i]);
   }
+  pary(bit+1,bit+n+1);
   while(q--){
     ll cmd,l,r;
     cin>>cmd>>l>>r;

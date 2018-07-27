@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -56,7 +56,30 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+map<ll,ll> cnt[MAXn];
 int main(){
   IOS();
-  
+  ll n,k;
+  cin>>n>>k;
+  REP(i,n-1){
+    ll a,b,w;
+    cin>>a>>b>>w;
+    a--,b--;
+    cnt[a][b] = cnt[b][a] = w;
+  }
+  ll ans=0;
+  MinHeap<ii> pq;
+  REP(i,n)if(SZ(cnt[i])==1) pq.push(mkp(cnt[i].begin()->Y,i));
+  while(k<n || SZ(pq)>2){
+    ii cur = pq.top();
+    pq.pop();
+    n--;
+    ans = cur.X;
+    // debug(n,ans);
+    ll x = cur.Y;
+    ll y = cnt[x].begin()->X;
+    cnt[y].erase(x);
+    if(SZ(cnt[y])==1) pq.push(mkp(cur.X+cnt[y].begin()->Y,y));
+  }
+  cout<<ans<<endl;
 }

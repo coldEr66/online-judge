@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -23,7 +23,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -56,7 +56,47 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll n,m;
+ll c[MAXn];
+bool vis[MAXn];
+vector<ll> al[MAXn],ral[MAXn];
+vector<ll> scc[MAXn];
+vector<ll> topo;
+void dfs1(ll cur){
+  vis[cur] = true;
+  for(ll it:al[cur])if(!vis[it]) dfs1(it);
+  topo.eb(cur);
+}
+void dfs2(ll cur,ll cnt){
+  scc[cnt].eb(c[cur]);
+  vis[cur] = true;
+  for(ll it:ral[cur])if(!vis[it]) dfs2(it,cnt);
+}
 int main(){
   IOS();
-  
+  cin>>n;
+  REP(i,n) cin>>c[i];
+  cin>>m;
+  REP(i,m){
+    ll a,b;
+    cin>>a>>b;
+    a--,b--;
+    al[a].eb(b);
+    ral[b].eb(a);
+  }
+  REP(i,n)if(!vis[i]) dfs1(i);
+  RST(vis,0);
+  debug(topo);
+  ll cnt=0;
+  for(ll i=n-1;i>=0;i--)if(!vis[topo[i]]) dfs2(topo[i],cnt++);
+  debug(cnt);
+  REP(i,cnt) sort(ALL(scc[i]));
+  ll ans=0,ct=1;
+  REP(i,cnt){
+    ll it = upper_bound(ALL(scc[i]),scc[i][0])-scc[i].begin();
+    debug(it,scc[i][0]);
+    ans+=scc[i][0];
+    ct = (ct*it)%MOD;
+  }
+  cout<<ans<<' '<<ct<<'\n';
 }

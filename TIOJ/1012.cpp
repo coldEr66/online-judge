@@ -52,11 +52,56 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=12,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+int d[MAXn];
 int main(){
   IOS();
-  
+  int n,m;
+  cin>>n>>m;
+  REP(i,n) cin>>d[i];
+  vector<int> v,tmp;
+  int cur=0;
+  int now=1;
+  bool ok=true;
+  while(cur<n){
+    if( d[cur]==now ) ++cur,++now;
+    else if( SZ(v) && v.back()==d[cur] ){
+      v.pob();
+      cur++;
+    }
+    else if( SZ(v) && v.back()!=d[cur] ){
+      bool fg = false;
+      while( SZ(tmp)<m ){
+        tmp.pb(v.back());
+        v.pob();
+        if(v.back()==d[cur]){
+          fg = true;
+          v.pob();
+          cur++;
+          break;
+        }
+      }
+      while( SZ(tmp) ){
+        v.pb(tmp.back());
+        tmp.pob();
+      }
+      if( !fg ){
+        if( now<=n ) v.pb(now++);
+        else{
+          ok=false;
+          break;
+        }
+      }
+    }
+    else if( now<=n ) v.pb(now++);
+    else{
+      ok=false;
+      break;
+    }
+  }
+  if(ok) cout<<"yes"<<endl;
+  else cout<<"no"<<endl;
 }

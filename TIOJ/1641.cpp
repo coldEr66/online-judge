@@ -1,12 +1,13 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
 typedef double lf;
-typedef pair<ll,ll> ii;
+typedef pair<int,int> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
 #define REP1(i,n) for(ll i=1;i<=n;i++)
+#define FOR(i,j,n,m) for(int i=j;i<n;i+=m)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
@@ -23,7 +24,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -42,7 +43,6 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
-#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +52,42 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e4+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+vector<pair<int,lf> > adj[MAXn];
+MinHeap<pair<lf,int>> pq;
+bool vis[MAXn];
+lf dis[MAXn];
 int main(){
   IOS();
-  
+  int n,m,s,t;
+  cin>>n>>m>>s>>t;
+  REP(i,n) dis[i] = 1000000;
+  s--,t--;
+  REP(i,m){
+    int a,b;
+    lf c;
+    cin>>a>>b>>c;
+    a--,b--;
+    c++;
+    adj[a].eb(mkp(b,log10(c)));
+  }
+  dis[s] = 0;
+  pq.push(mkp(dis[s],s));
+  REP(i,n){
+    int tp = -1;
+    while(SZ(pq) && vis[tp = pq.top().Y]) pq.pop();
+    if(tp==-1) break;
+    vis[tp] = 1;
+    for(auto it:adj[tp]){
+      if(!vis[it.X] && dis[it.X]>dis[tp]+it.Y){
+        dis[it.X] = dis[tp]+it.Y;
+        pq.push(mkp(dis[it.X],it.X));
+      }
+    }
+  }
+  int pre = (int)(floor(dis[t]+1e-7)+1e-7);
+  cout<<fixed<<setprecision(2)<<pow(10,dis[t]-pre)<<"e+"<<setfill('0')<<setw(3)<<pre<<'\n';
 }

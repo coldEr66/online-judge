@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -58,5 +58,18 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  int n;
+  cin>>n;
+  int ans = 0;
+  REP(i,n){
+    string s;
+    cin>>s;
+    if(s[2]==s[3] && s[4]==s[5]){
+      if(s[3]!=s[4]) ans+=1500;
+      else ans+=2000;
+    }
+    else if(s[2]==s[3] && s[3]==s[4]) ans+=1000;
+    else if(s[3]==s[4] && s[4]==s[5]) ans+=1000;
+  }
+  cout<<ans<<endl;
 }

@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -23,7 +23,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -56,7 +56,36 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+string s,t;
+ll cal(ll a,ll b){
+  map<char,ll> cnt;
+  cnt[s[a]]++;
+  cnt[s[b]]++;
+  cnt[t[a]]++;
+  cnt[t[b]]++;
+  vector<ll> tmp;
+  for(auto it:cnt) tmp.eb(it.Y);
+  sort(ALL(tmp));
+  if(SZ(tmp)==1) return 0;
+  if(SZ(tmp)==4) return 2;
+  if(SZ(tmp)==2){
+    if(tmp[0]==2) return 0;
+    return 1;
+  }
+  if(s[a]==s[b]) return 2;
+  return 1;
+}
 int main(){
   IOS();
-  
+  ll n; cin>>n;
+  cin>>s>>t;
+  ll ans=0;
+  for(int l=0,r=n-1;l<=r;l++,r--){
+    if(l==r){
+      if(s[l]!=t[r]) ans++;
+      continue;
+    }
+    ans+=cal(l,r);
+  }
+  cout<<ans<<'\n';
 }

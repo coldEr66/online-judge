@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -23,7 +23,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -56,7 +56,25 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll m,n;
+void myexp(ll a,ll b,ll &x,ll &y){
+  if(!b) x=1,y=0;
+  else{
+    myexp(b,a%b,y,x);
+    y-=x*(a/b);
+  }
+}
+ll sol(ll a,ll b){
+  ll x,y;
+  myexp(a,b,x,y);
+  return (x+b)%b;
+}
 int main(){
   IOS();
-  
+  while(cin>>m>>n){
+    ll ans = sol(m,n);
+    if(__gcd(m,n)!=1 || ans==0) cout<<"No Inverse";
+    else cout<<ans;
+    cout<<'\n';
+  }
 }

@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -23,7 +23,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -42,7 +42,6 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
-#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -58,5 +57,13 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  ll n,m;
+  while(cin>>n>>m && n && m){
+    ll tg = min(n,m);
+    ll ans = 0;
+    ans+=(n*m+n+m+1)*tg;
+    ans+=((tg*(tg+1)*(2*tg+1))/6);
+    ans-=((n+m+2)*(tg*(tg+1))/2);
+    cout<<ans<<'\n';
+  }
 }

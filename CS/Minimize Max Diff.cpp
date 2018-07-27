@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -23,7 +23,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -56,7 +56,33 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll n,k;
+ll d[MAXn],dt[MAXn];
+ll T[MAXn][MAXlg];
+void build(){
+  REP1(i,n-1) T[i][0] = dt[i];
+  ll x = __lg(n-1);
+  REP1(j,x)for(ll i=n-1;i>=0;i--){
+    if(i+(1<<(j-1))<=n-1) T[i][j] = max(T[i][j-1],T[i+(1<<(j-1))][j-1]);
+  }
+}
+ll qr(ll a,ll b){
+  ll x = __lg(b-a+1);
+  return max(T[a][x],T[b-(1<<x)+1][x]);
+}
 int main(){
   IOS();
-  
+  cin>>n>>k;
+  REP(i,n){
+    cin>>d[i];
+    if(i!=0) dt[i] = d[i]-d[i-1];
+  }
+  pary(dt+1,dt+n);
+  build();
+  ll tmp = n-k-1;
+  ll ans = INF;
+  for(int i=1;i+tmp-1<n;i++){
+    ans = min(ans,qr(i,i+tmp-1));
+  }
+  cout<<ans<<'\n';
 }

@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -23,7 +23,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -52,11 +52,30 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=2e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll d[MAXn];   //前綴，後綴和
 int main(){
   IOS();
-  
+  ll n; cin>>n;
+  vector<ll> s(n+5),S(n+5);
+  REP1(i,n) cin>>d[i];
+  REP1(i,n){
+    s[i] = s[i-1]+d[i];
+  }
+  for(ll i=n;i>=0;i--){
+    S[i] = S[i+1]+d[i];
+  }
+  debug(s);
+  debug(S);
+  ll ans = 0;
+  for(int i=1;i<n;i++){
+    ll tmp = s[i];
+    ll it = lower_bound(ALL(S),tmp,greater<ll>())-S.begin();
+    debug(it);
+    if(it>i && S[it]==tmp) ans = max(ans,tmp);
+  }
+  cout<<ans<<'\n';
 }

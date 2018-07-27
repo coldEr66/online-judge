@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -7,6 +7,7 @@ typedef double lf;
 typedef pair<ll,ll> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
 #define REP1(i,n) for(ll i=1;i<=n;i++)
+#define FOR(i,j,n,m) for(int i=j;i<n;i+=m)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
@@ -23,7 +24,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -42,7 +43,6 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
-#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +52,47 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=2e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=3e18;
 
+ll d[MAXn],tmp[MAXn];
+ll mul(ll a,ll b){
+  if(a==0 || b==0) return 0;
+  if(a>=(INF/b)) return INF;
+  return min(INF,a*b);
+}
 int main(){
   IOS();
-  
+  ll n,k;
+  cin>>n>>k;
+  REP(i,n) cin>>d[i];
+  tmp[n] = n;
+  for(ll i=n-1;i>=0;i--){
+    tmp[i] = tmp[i+1];
+    if(d[i]!=1) tmp[i] = i;
+  }
+  pary(tmp,tmp+n+1);
+  ll ans = 0;
+  REP(l,n){
+    ll cur = l;
+    ll p = 1,s = 0;
+    while(cur<n && p<INF){
+      ll nxt = tmp[cur];
+      if(nxt==cur){
+        p = mul(p,d[nxt]);
+        s+=d[nxt];
+        if(p==s*k) ans++;
+        cur++;
+        continue;
+      }
+      if(p%k==0){
+        ll tg = p/k-s;
+        if(tg>0 && tg<=nxt-cur) ans++;
+      }
+      s+=nxt-cur;
+      cur = nxt;
+    }
+  }
+  cout<<ans<<'\n';
 }

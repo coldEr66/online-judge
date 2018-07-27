@@ -56,7 +56,28 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+map<char,int> cnt;
+string s[MAXn];
 int main(){
   IOS();
-  
+  int n;
+  cin>>n;
+  REP(i,n){
+    cin>>s[i];
+    cnt[s[i][0]]++;
+  }
+  int ans = 0;
+  REP(i,n){
+    string cur=s[i];
+    cnt[s[i][0]]--;
+    map<char,int> tmp = cnt;
+    bool fg = true;
+    REP(j,SZ(cur)){
+      if(tmp[cur[j]]==0) fg=false;
+      else tmp[cur[j]]--;
+    }
+    if(fg) ans++;
+    cnt[s[i][0]]++;
+  }
+  cout<<ans<<endl;
 }

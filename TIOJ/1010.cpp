@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -58,5 +58,16 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  string s="",t="";
+  string a,b;
+  cin>>a>>b;
+  int n=SZ(a),m=SZ(b);
+  int ans = 0;
+  REP(i,min(n,m)){
+    s+=a[i];
+    t=b[m-i-1]+t;
+    debug(s,t);
+    if(s==t) ans=i+1;
+  }
+  cout<<ans<<endl;
 }

@@ -1,10 +1,17 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include <cstring>
+#include <vector>
+#include <queue>
+#include <set>
+#include <map>
 #pragma GCC optimize("unroll-loops")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
 typedef double lf;
-typedef pair<ll,ll> ii;
+typedef pair<int,int> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
 #define REP1(i,n) for(ll i=1;i<=n;i++)
 #define RST(i,n) memset(i,n,sizeof i)
@@ -47,16 +54,67 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #endif // cold66
 //}
 
-template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
-template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
-template<class T> using MaxHeap = priority_queue<T>;
-template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
-
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=0x3f3f3f3f;
 
+vector<ii> e[MAXn];
+priority_queue<pair<int,ii> > pq;
+int fa[MAXn],sz[MAXn];
+int dp[MAXn];
+int fd(int x){return fa[x] = (x==fa[x] ?x:fd(fa[x]));}
+void uni(int x,int y){
+  if(sz[x]<sz[y]) swap(x,y);
+  fa[y] = x;
+  sz[x]+=sz[y];
+  sz[y] = 0;
+}
+void dfs(int x,int an){
+  REP(i,SZ(e[x])){
+    ii it = e[x][i];
+    if(it.X==an) continue;
+    dp[it.X] = min(dp[x],it.Y);
+    dfs(it.X,x);
+  }
+}
 int main(){
   IOS();
-  
+  int n,m;
+  while(cin>>n>>m){
+    if(n==0 && m==0) break;
+    REP(i,n){
+      fa[i] = i;
+      sz[i] = 1;
+      e[i].clear();
+    }
+    while(SZ(pq)) pq.pop();
+    while(m--){
+      int a,b,c;
+      cin>>a>>b>>c;
+      a--,b--;
+      pq.push(mkp(c,mkp(a,b)));
+    }
+    debug(SZ(pq));
+    REP(i,n-1){
+      debug("QQ");
+      debug(fd(pq.top().Y.X),fd(pq.top().Y.Y));
+      while(SZ(pq) && fd(pq.top().Y.X)==fd(pq.top().Y.Y)) pq.pop();
+      debug("GEE");
+      if(!SZ(pq)) break;
+      pair<int,ii> cur = pq.top();
+      pq.pop();
+      uni(fd(cur.Y.X),fd(cur.Y.Y));
+      debug(cur.Y.X,cur.Y.Y,cur.X);
+      e[cur.Y.X].pb(mkp(cur.Y.Y,cur.X));
+      e[cur.Y.Y].pb(mkp(cur.Y.X,cur.X));
+    }
+    debug("hi");
+    int st,dst;
+    cin>>st>>dst;
+    st--,dst--;
+    RST(dp,INF);
+    dfs(st,st);
+    if(dp[dst]==INF) cout<<0<<endl;
+    else cout<<dp[dst]<<endl;
+  }
 }

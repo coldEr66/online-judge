@@ -56,7 +56,16 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+string s[] = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 int main(){
   IOS();
-  
+  string t;
+  int n;
+  cin>>t>>n;
+  int tmp=-1;
+  REP(i,7){
+    if(t==s[i]) tmp = i;
+  }
+  REP(i,n) tmp = (tmp+1)%7;
+  cout<<s[tmp]<<endl;
 }

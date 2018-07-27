@@ -58,5 +58,20 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  string s;
+  cin>>s;
+  REP(i,SZ(s)){
+    if(s[i]=='B') continue;
+    int idx = i+1;
+    while(s[idx]=='A'){
+      s[idx] = '.';
+      idx++;
+    }
+    if(idx!=i+1) i=idx-1;
+  }
+  REP(i,SZ(s)){
+    if(s[i]=='.') continue;
+    cout<<s[i];
+  }
+  cout<<endl;
 }

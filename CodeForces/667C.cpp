@@ -52,11 +52,30 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e4+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+string s;
+int n;
+set<string> st;
+int dp[MAXn][2];
 int main(){
   IOS();
-  
+  cin>>s;
+  n = SZ(s);
+  dp[n][0] = dp[n][1] = 1;
+  for(int i=n-2;i>=5;i--){
+    if(dp[i+2][1]) dp[i][0] = 1;
+    if(dp[i+2][0] && (s[i+2]!=s[i] || s[i+3]!=s[i+1])) dp[i][0] = 1;
+    if(dp[i+3][0]) dp[i][1] = 1;
+    if(dp[i+3][1] && (s[i+3]!=s[i] || s[i+4]!=s[i+1] || s[i+5]!=s[i+2])) dp[i][1] = 1;
+  }
+  REP(i,n) debug(dp[i][0],dp[i][1]);
+  REP(i,n){
+    if(dp[i][0]) st.insert(s.substr(i,2));
+    if(dp[i][1]) st.insert(s.substr(i,3));
+  }
+  cout<<SZ(st)<<endl;
+  for(auto it:st) cout<<it<<endl;
 }

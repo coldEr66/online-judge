@@ -1,6 +1,9 @@
-#include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <cstring>
+#include <queue>
+#include <set>
 using namespace std;
 typedef long long ll;
 typedef double lf;
@@ -47,16 +50,29 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #endif // cold66
 //}
 
-template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
-template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
-template<class T> using MaxHeap = priority_queue<T>;
-template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
-
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+
+priority_queue<int,vector<int>,greater<int> > pq;
 
 int main(){
   IOS();
-  
+  int n;
+  cin>>n;
+  REP(i,n){
+    int x;
+    cin>>x;
+    pq.push(x);
+  }
+  int ans = 0;
+  while(SZ(pq)>1){
+    int tp1 = pq.top();
+    pq.pop();
+    int tp2 = pq.top();
+    pq.pop();
+    int tmp = tp1+tp2;
+    ans+=tmp;
+    pq.push(tmp);
+  }
+  cout<<ans<<endl;
 }

@@ -52,11 +52,46 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=6e2+10,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll INF=0x3f3f3f3f;
 
+lf x[MAXn];
+lf m[MAXn][MAXn];
 int main(){
   IOS();
-  
+  cout<<fixed<<setprecision(25);
+  int t;
+  cin>>t;
+  while(t--){
+    int n;
+    cin>>n;
+    REP(i,n)REP(j,n+1) cin>>m[i][j];
+    REP(i,n){
+      lf ma = 0.0;
+      int idx=i;
+      for(int j=i+1;j<n;j++){
+        if(fabs(m[j][i])>ma){
+          ma=fabs(m[j][i]);
+          idx=j;
+        }
+      }
+      REP(k,n+1) swap(m[i][k],m[idx][k]);
+      lf d = m[i][i];
+      for(int j=i;j<=n;j++) m[i][j]/=d;
+      for(int j=i+1;j<n;j++){
+        //if(m[j][i]!=0){
+          lf tp = m[j][i];
+          for(int k=i;k<=n;k++) m[j][k]-=tp*m[i][k];
+        //}
+      }
+    }
+    REP(i,n) pary(m[i],m[i]+n+1);
+    for(int i=n-1;i>=0;i--){
+      lf d = 0.0;
+      for(int j=i+1;j<n;j++) d+=x[j]*m[i][j];
+      x[i] = (m[i][n]-d)/m[i][i];
+    }
+    REP(i,n) cout<<x[i]<<endl;
+  }
 }

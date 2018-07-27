@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -23,7 +23,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -58,5 +58,23 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  ll n,k;
+  cin>>n>>k;
+  vector<ll> d(n);
+  REP(i,n) cin>>d[i];
+  sort(ALL(d));
+  ll cnt = 0;
+  ll tmp = k;
+  REP(i,n){
+    if(d[i]<=tmp*2){
+      tmp = max(tmp,d[i]);
+      continue;
+    }
+    while(tmp*2<d[i]){
+      tmp*=2;
+      cnt++;
+    }
+    tmp = max(tmp,d[i]);
+  }
+  cout<<cnt<<endl;
 }

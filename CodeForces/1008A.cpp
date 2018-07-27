@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -7,6 +7,7 @@ typedef double lf;
 typedef pair<ll,ll> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
 #define REP1(i,n) for(ll i=1;i<=n;i++)
+#define FOR(i,j,n,m) for(int i=j;i<n;i+=m)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
@@ -23,7 +24,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -42,7 +43,6 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
-#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -56,7 +56,25 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll chk(char c){
+  if(c=='a' || c=='e' || c=='i' || c=='o' || c=='u') return 0;
+  if(c=='n') return 1;
+  else return 2;
+}
 int main(){
   IOS();
-  
+  string s;
+  cin>>s;
+  s+=' ';
+  ll n = SZ(s);
+  bool fg = true;
+  REP(i,n-1){
+    debug(s[i]);
+    debug(chk(s[i]),chk(s[i+1]));
+    if(chk(s[i])==2){
+      if(chk(s[i+1])!=0) fg = false;
+    }
+  }
+  if(!fg) cout<<"NO"<<'\n';
+  else cout<<"YES"<<'\n';
 }

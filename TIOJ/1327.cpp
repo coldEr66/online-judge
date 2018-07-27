@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -56,7 +56,60 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+struct E{
+  ll fr,to,w;
+  bool operator <(const E &a){
+    return w<a.w;
+  }
+};
+ll fa[MAXn],sz[MAXn];
+ll fd(ll x){return fa[x] = (x==fa[x] ?x:fd(fa[x]));}
+void uni(ll a,ll b){
+  a=fd(a), b=fd(b);
+  if(sz[a]<sz[b]) swap(a,b);
+  fa[b] = a;
+  sz[a]+=sz[b];
+  sz[b] = 0;
+}
+vector<pair<ii,ll>> d;
+vector<E> e;
+bool cmp(const pair<ii,ll> &a,const pair<ii,ll> &b){
+  if(a.X.Y==b.X.Y) return a.X.X<b.X.X;
+  else return a.X.Y<b.X.Y;
+}
 int main(){
   IOS();
-  
+  int t;
+  cin>>t;
+  while(t--){
+    ll n;
+    cin>>n;
+    d.clear();
+    e.clear();
+    REP(i,n){
+      fa[i] = i;
+      sz[i] = 1;
+    }
+    REP(i,n){
+      ll x,y;
+      cin>>x>>y;
+      d.pb(mkp(mkp(x,y),i));
+    }
+    sort(ALL(d));
+    d.resize(unique(ALL(d))-d.begin());
+    n = SZ(d);
+    REP(i,n-1)if(d[i].X.X==d[i+1].X.X) e.pb((E){d[i].Y,d[i+1].Y,abs(d[i].X.Y-d[i+1].X.Y)});
+    sort(ALL(d),cmp);
+    REP(i,n-1)if(d[i].X.Y==d[i+1].X.Y) e.pb((E){d[i].Y,d[i+1].Y,abs(d[i].X.X-d[i+1].X.X)});
+    sort(ALL(e));
+    REP(i,SZ(e)) debug(e[i].fr,e[i].to,e[i].w);
+    ll ans = 0;
+    REP(i,SZ(e)){
+      ll x=e[i].fr,y=e[i].to,w=e[i].w;
+      if(fd(x)==fd(y)) continue;
+      uni(x,y);
+      ans+=w;
+    }
+    cout<<ans<<endl;
+  }
 }

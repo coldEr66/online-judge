@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -52,11 +52,37 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e3+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+char d[3][MAXn];
+ll dp[3][MAXn];
+int x;
 int main(){
+  freopen("let_it_flow.txt","r",stdin);
+  freopen("LetItFlow","w",stdout);
   IOS();
-  
+  int t;
+  cin>>t;
+  while(t--){
+    ll n;
+    cin>>n;
+    RST(dp,0);
+    REP(i,3)REP(j,n) cin>>d[i][j];
+    if(d[0][0]=='.' && d[1][0]=='.') dp[1][0]++;
+    REP1(i,n-1){
+      if(d[0][i]=='.' && d[1][i]=='.'){
+        dp[0][i]=(dp[0][i]+dp[1][i-1])%MOD;
+        dp[1][i]=(dp[1][i]+dp[0][i-1])%MOD;
+      }
+      if(d[1][i]=='.' && d[2][i]=='.'){
+        dp[2][i]=(dp[2][i]+dp[1][i-1])%MOD;
+        dp[1][i]=(dp[1][i]+dp[2][i-1])%MOD;
+        // debug(dp[2][i]);
+      }
+    }
+    cout<<"Case #"<<++x<<": ";
+    cout<<dp[2][n-1]<<endl;
+  }
 }

@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -23,7 +23,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -56,7 +56,27 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll a[MAXn];
+set<ll> st;
 int main(){
   IOS();
-  
+  ll n,d;
+  cin>>n>>d;
+  REP(i,n) a[i] = INF;
+  REP(i,n) cin>>a[i];
+  REP(i,n){
+    bool fg = true;
+    ll pos = a[i]-d;
+    for(int j=i-1;j>=0;j--){
+      if(abs(a[j]-pos)<d) fg = false;
+    }
+    if(fg) st.insert(pos);
+    fg = true;
+    pos = a[i]+d;
+    for(int j=i+1;j<n;j++){
+      if(abs(a[j]-pos)<d) fg = false;
+    }
+    if(fg) st.insert(pos);
+  }
+  cout<<SZ(st)<<endl;
 }

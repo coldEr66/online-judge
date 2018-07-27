@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -7,6 +7,7 @@ typedef double lf;
 typedef pair<ll,ll> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
 #define REP1(i,n) for(ll i=1;i<=n;i++)
+#define FOR(i,j,n,m) for(int i=j;i<n;i+=m)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
@@ -23,7 +24,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -42,7 +43,6 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
-#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +52,70 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=3e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
+const ll MAX = 1<<18;
 
+ll n,q;
+ll d[MAXn],bit[MAXn];
+ll lowbit(ll x){return x&(-x);}
+void ins(ll pos,ll v){
+  ll tp = v-d[pos];
+  d[pos] = v;
+  while(pos<=MAX){
+    bit[pos]+=tp;
+    pos+=lowbit(pos);
+  }
+}
+ll qr(ll pos){
+  ll ret = 0;
+  while(pos>0){
+    ret+=bit[pos];
+    pos-=lowbit(pos);
+  }
+  return ret;
+}
+ll fd(ll s){
+  if(bit[MAX]<=s) return INF;
+  ll tp = 0,sum = 0;
+  for(ll i=__lg(n)+1;i>=0;i--){
+    if(sum+bit[tp|(1<<i)]<=s){
+      sum+=bit[tp|(1<<i)];
+      tp|=(1<<i);
+    }
+  }
+  return tp+1;
+}
 int main(){
   IOS();
-  
+  cin>>n>>q;
+  REP1(i,n){
+    ll x; cin>>x;
+    ins(i,x);
+  }
+  pary(bit+1,bit+n+1);
+  while(q--){
+    ll p,x;
+    cin>>p>>x;
+    ins(p,x);
+    if(d[1]==0){
+      cout<<1<<'\n';
+      continue;
+    }
+    ll cur = d[1];
+    while(1){
+      ll tmp = fd(2*cur-1);
+      if(tmp==INF){
+        cout<<-1<<'\n';
+        break;
+      }
+      ll sum = qr(tmp-1);
+      if(sum==d[tmp]){
+        cout<<tmp<<'\n';
+        break;
+      }
+      cur = sum+d[tmp];
+    }
+  }
 }

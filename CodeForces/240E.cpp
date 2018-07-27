@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -23,7 +23,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -42,7 +42,6 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
-#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -56,7 +55,46 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+vector<pair<ii,ll>> adj[MAXn];
+ll vis[MAXn];
 int main(){
   IOS();
-  
+  freopen("input.txt","r",stdin);
+	freopen("output.txt","w",stdout);
+  ll n,m;
+  cin>>n>>m;
+  REP1(i,m){
+    ll a,b,c;
+    cin>>a>>b>>c;
+    a--,b--;
+    adj[a].eb(mkp(mkp(b,c),i));
+  }
+  queue<ll> q;
+  vis[0] = -1;
+  q.push(0);
+  while(SZ(q)){
+    ll cur = q.front();
+    q.pop();
+    for(auto it:adj[cur]){
+      if(!vis[it.X.X] || (vis[it.X.X] && it.X.Y==0)){
+        vis[it.X.X] = (it.X.Y ?it.Y:-1);
+        q.push(it.X.X);
+      }
+    }
+  }
+  vector<ll> ans;
+  bool fg = true;
+  REP(i,n){
+    if(!vis[i]) fg = false;
+    if(vis[i]!=-1) ans.eb(vis[i]);
+  }
+  // debug(ans);
+  if(!fg) return cout<<-1<<'\n',0;
+  cout<<SZ(ans)<<'\n';
+  REP(i,SZ(ans)){
+    // debug("hi");
+    if(i!=0) cout<<' ';
+    cout<<ans[i];
+  }
+  cout<<'\n';
 }

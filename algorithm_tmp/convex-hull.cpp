@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -52,11 +52,39 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e3+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+vector<ii> d,hull(1000,mkp(INF,INF));
+vector<ll> ans;
+ii operator -(const ii &a,const ii &b){return mkp(a.X-b.X,a.Y-b.Y);}
+ll operator ^(const ii &a,const ii &b){return a.X*b.Y-a.Y*b.X;}
 int main(){
   IOS();
-  
+  ll n;
+  cin>>n;
+  REP(i,n){
+    ll x,y;
+    cin>>x>>y;
+    d.pb(mkp(x,y));
+  }
+  sort(ALL(d));
+  d.resize(unique(ALL(d))-d.begin());
+  ll idx = 0;
+  REP(i,SZ(d)){
+    while(idx>1 && ((hull[idx-1]-hull[idx-2])^(d[i]-hull[idx-2]))<0) idx--;
+    hull[idx++] = d[i];
+  }
+  ll lim = idx;
+  for(int i=SZ(d)-2;i>=0;i--){
+    while(idx>lim && ((hull[idx-1]-hull[idx-2])^(d[i]-hull[idx-2]))<0) idx--;
+    hull[idx++] = d[i];
+  }
+  if(SZ(d)>1) idx--;
+  hull.resize(idx);
+  sort(ALL(hull));
+  REP(i,SZ(hull)){
+    cout<<hull[i].X<<' '<<hull[i].Y<<endl;
+  }
 }

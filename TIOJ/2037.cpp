@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -56,7 +56,39 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+bool vis[MAXn];
+int yp[MAXn];
+vector<int> adj[MAXn];
+bool dfs(int cur){
+  for(int it:adj[cur])if(!vis[it]){
+    vis[it] = true;
+    if(yp[it]==-1 || dfs(yp[it])){
+      yp[it] = cur;
+      return true;
+    }
+  }
+  return false;
+}
 int main(){
   IOS();
-  
+  int t;
+  cin>>t;
+  while(t--){
+    int n,m,k;
+    cin>>n>>m>>k;
+    REP(i,n) adj[i].clear();
+    while(k--){
+      int a,b;
+      cin>>a>>b;
+      a--,b--;
+      adj[a].pb(b);
+    }
+    RST(yp,-1);
+    int cnt = 0;
+    REP(i,n){
+      RST(vis,0);
+      if(dfs(i)) cnt++;
+    }
+    cout<<cnt<<endl;
+  }
 }

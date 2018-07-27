@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -23,7 +23,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -42,7 +42,6 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #else
 #define debug(...)
 #define pary(...)
-#define endl '\n'
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
@@ -52,11 +51,50 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=4e4+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll vis[MAXn];
+ll n,m;
+bool ok;
+vector<ll> adj[MAXn];
+void dfs(ll cur,ll c){
+  for(auto it:adj[cur]){
+    if(!vis[it]) vis[it] = (c==1 ?2:1);
+    if(vis[it]==c) ok = true;
+  }
+}
 int main(){
   IOS();
-  
+  while(cin>>n>>m && n){
+    debug("hi");
+    ok = false;
+    REP(i,n) adj[i].clear();
+    RST(vis,0);
+    debug("hi");
+    while(m--){
+      ll a,b;
+      cin>>a>>b;
+      a--,b--;
+      adj[a].eb(b);
+      adj[b].eb(a);
+    }
+    queue<ll> q;
+    vis[0] = 1;
+    q.push(0);
+    while(SZ(q)){
+      ll cur = q.front();
+      q.pop();
+      for(auto it:adj[cur]){
+        if(!vis[it]){
+          vis[it] = (vis[cur]==1 ?2:1);
+          q.push(it);
+        }
+        else if(vis[it]==vis[cur]) ok = true;
+      }
+    }
+    if(ok) cout<<"No"<<'\n';
+    else cout<<"Yes"<<'\n';
+  }
 }

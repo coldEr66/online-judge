@@ -58,5 +58,8 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  string s,t;
+  cin>>s>>t;
+  REP(i,SZ(s)) s[i] = t[s[i]-'a'];
+  cout<<s<<endl;
 }

@@ -55,8 +55,20 @@ template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
+const lf PI=acos(-1);
 
 int main(){
   IOS();
-  
+  lf d,h,v,e;
+  cin>>d>>h>>v>>e;
+  debug(PI);
+  d/=2;
+  lf a = d*d*PI;
+  v/=a;
+  v-=e;
+  if(v<=0) cout<<"NO"<<endl;
+  else{
+    cout<<"YES"<<endl;
+    cout<<fixed<<setprecision(15)<<h/v<<endl;
+  }
 }

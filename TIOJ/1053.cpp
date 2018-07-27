@@ -58,5 +58,9 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  int a,b;
+  cin>>a>>b;
+  if(b>a) swap(a,b);
+  if(a%b==0) cout<<"Y"<<endl;
+  else cout<<"N"<<endl;
 }

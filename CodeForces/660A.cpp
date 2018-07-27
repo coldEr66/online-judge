@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -52,11 +52,23 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e3+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+int d[MAXn];
 int main(){
   IOS();
-  
+  int n;
+  cin>>n;
+  int ans = 0;
+  REP(i,n) cin>>d[i];
+  REP(i,n-1)if(__gcd(d[i],d[i+1])!=1) ans++;
+  cout<<ans<<endl;
+  REP(i,n-1){
+    cout<<d[i]<<' ';
+    if(__gcd(d[i],d[i+1])!=1) cout<<1<<' ';
+  }
+
+  cout<<d[n-1]<<endl;
 }

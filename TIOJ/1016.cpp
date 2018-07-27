@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -58,5 +58,63 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  string s;
+  while(cin>>s){
+    int n = SZ(s);
+    int a = 0,b = 0;
+    int out = 0;
+    int now = 0;
+    bool fg = false;
+    REP(i,n){
+      if(out==3){
+        fg = !fg;
+        out=0,now=0;
+      }
+      char tp = s[i];
+      if(tp=='K' || tp=='O') out++;
+      else if(tp=='H' || tp=='T'){
+        debug(now,a);
+        for(int j=0;j<3;j++)if(now&(1<<j)) (fg==true ?b++:a++);
+        now=0;
+        debug(a);
+        if(tp=='H') fg==true ?b++:a++;
+        else now=4;
+      }
+      else if(tp=='S'){
+        for(int j=2;j>=0;j--){
+          if(j==2 && now&(1<<j)){
+            now-=(1<<j);
+            fg==true ?b++:a++;
+          }
+          else if(now&(1<<j)){
+            now-=(1<<j);
+            now|=(1<<(j+1));
+          }
+        }
+        now|=1;
+        debug(now,a);
+      }
+      else if(tp=='D'){
+        for(int j=2;j>=0;j--){
+          if(j>=1 && now&(1<<j)){
+            now-=(1<<j);
+            fg==true ?b++:a++;
+          }
+          else if(now&(1<<j)){
+            now-=(1<<j);
+            now|=(1<<(j+2));
+          }
+        }
+        now|=2;
+      }
+      else if(tp=='W'){
+        if(now==7) fg==true ?b++:a++;
+        else if(now%2==0) now+=1;
+        else if(now==1) now = 3;
+        else now = 7;
+        debug(a);
+      }
+    }
+    cout<<a<<' '<<b<<endl;
+  }
 }

@@ -56,7 +56,21 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+int a[MAXn],b[MAXn];
 int main(){
   IOS();
-  
+  int n,m;
+  cin>>n>>m;
+  REP(i,n) cin>>a[i];
+  REP(i,m) cin>>b[i];
+  int cnt = 0;
+  REP(i,m-n+1){
+    bool fg = true;
+    REP(j,n)if(a[j]^b[i+j]!=1){
+      fg = false;
+      break;
+    }
+    if(fg) cnt++;
+  }
+  cout<<cnt<<endl;
 }

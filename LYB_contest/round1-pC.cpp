@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast,unroll-loops,no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 using namespace std;
 typedef long long ll;
@@ -23,7 +23,7 @@ typedef pair<ll,ll> ii;
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
 template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.X<<","<<_p.Y<<")";}
+template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
 template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
 {
     _s<<"{";
@@ -56,7 +56,49 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+string s = "NDDWFF";
+ll f[MAXn];
+vector<string> v;
+void build(){
+  ll cur = f[0] = -1;
+  REP1(i,SZ(s)-1){
+    while(cur!=-1 && s[cur+1]!=s[i]) cur = f[cur];
+    if(s[cur+1]==s[i]) cur++;
+    f[i] = cur;
+  }
+}
+ll cal(string &x){
+  ll cur = -1;
+  ll ret = 0;
+  REP(i,SZ(x)){
+    while(cur!=-1 && s[cur+1]!=x[i]) cur = f[cur];
+    if(s[cur+1]==x[i]) cur++;
+    if(!s[cur+1]){
+      ret++;
+      cur = f[cur];
+    }
+  }
+  return ret;
+}
 int main(){
   IOS();
-  
+  ll n;
+  build();
+  while(cin>>n){
+    v.clear();
+    REP(i,n){
+      string t;
+      cin>>t;
+      string tmp = t.substr(3,SZ(t)-3);
+      debug(tmp);
+      v.eb(tmp);
+    }
+    ll ans = 0;
+    REP(i,SZ(v)){
+      string tmp = v[i];
+      ans+=cal(v[i]);
+      debug(ans);
+    }
+    cout<<ans<<'\n';
+  }
 }

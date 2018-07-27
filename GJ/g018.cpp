@@ -1,6 +1,9 @@
-#include <bits/stdc++.h>
-#pragma GCC optimize("unroll-loops")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+#include <iostream>
+#include <algorithm>
+#include <map>
+#include <cstring>
+#include <queue>
+#include <set>
 using namespace std;
 typedef long long ll;
 typedef double lf;
@@ -47,16 +50,31 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #endif // cold66
 //}
 
-template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
-template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
-template<class T> using MaxHeap = priority_queue<T>;
-template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
-
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f3f3f3f3f;
 
+map<char,int> cnt;
 int main(){
   IOS();
-  
+  string s;
+  while(getline(cin,s)){
+    if(s=="=====") break;
+    string t;
+    getline(cin,t);
+    cnt.clear();
+    if(SZ(t)!=SZ(s)){
+      cout<<"No"<<endl;
+      continue;
+    }
+    int ans = 1;
+    REP(i,SZ(s))if(isalpha(s[i])) cnt[s[i]]++;
+    REP(i,SZ(t))if(isalpha(t[i])){
+      debug(cnt[t[i]]);
+      if(cnt[t[i]]==0){
+        ans = 0;
+      }
+      else cnt[t[i]]--;
+    }
+    cout<<(ans ?"Yes":"No")<<endl;
+  }
 }

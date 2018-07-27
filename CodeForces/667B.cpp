@@ -56,7 +56,15 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
+ll d[MAXn];
 int main(){
   IOS();
-  
+  ll n;
+  cin>>n;
+  REP(i,n) cin>>d[i];
+  sort(d,d+n);
+  ll ans = d[n-1];
+  REP(i,n-1) ans-=d[i];
+  ans = max(ans+1,0LL);
+  cout<<ans<<endl;
 }

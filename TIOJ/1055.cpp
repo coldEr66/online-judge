@@ -58,5 +58,12 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 int main(){
   IOS();
-  
+  int a,b;
+  cin>>a>>b;
+  for(int i=a;i!=b;(a<=b ?i++:i--)){
+    REP(j,i) cout<<"*";
+    cout<<endl;
+  }
+  REP(i,b) cout<<"*";
+  cout<<endl;
 }
