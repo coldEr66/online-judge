@@ -63,11 +63,9 @@ ll dis[MAXn];
 ll n,m;
 
 bool NEGATIVE_CYCLE(){
-  REP(i,n-1){
-    REP(j,m){
-      ll cur=v[j].a,to=v[j].b,w=v[j].w;
-      if(dis[to]>dis[cur]+w) return true;
-    }
+  REP(j,m){
+    ll cur=v[j].a,to=v[j].b,w=v[j].w;
+    if(dis[to]>dis[cur]+w) return true;
   }
   return false;
 }
@@ -91,7 +89,7 @@ int main(){
       debug(dis[to],to);
     }
   }
-  if(NEGATIVE_CYCLE()) cout<<"NEGATIVE_CYCLE"<<endl;
+  if(NEGATIVE_CYCLE()) return cout<<"NEGATIVE_CYCLE"<<endl,0;
   ll end=0; // 終點
   cout<<dis[end]<<endl;
 }

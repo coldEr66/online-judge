@@ -57,16 +57,16 @@ const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
 ll m,n;
-void myexp(ll a,ll b,ll &x,ll &y){
+void exgcd(ll a,ll b,ll &x,ll &y){
   if(!b) x=1,y=0;
   else{
-    myexp(b,a%b,y,x);
+    exgcd(b,a%b,y,x);
     y-=x*(a/b);
   }
 }
 ll sol(ll a,ll b){
   ll x,y;
-  myexp(a,b,x,y);
+  exgcd(a,b,x,y);
   return (x+b)%b;
 }
 int main(){
@@ -75,6 +75,6 @@ int main(){
     ll ans = sol(m,n);
     if(__gcd(m,n)!=1 || ans==0) cout<<"No Inverse";
     else cout<<ans;
-    cout<<'\n';
+    cout<<endl;
   }
 }

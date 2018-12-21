@@ -94,11 +94,10 @@ int main(){
         //}
       }
     }
-    REP(i,n) pary(m[i],m[i]+n+1);
     for(int i=n-1;i>=0;i--){
       lf d = 0.0;
       for(int j=i+1;j<n;j++) d+=x[j]*m[i][j];
-      x[i] = (m[i][n]-d)/m[i][i];
+      x[i] = m[i][n]-d;
     }
     REP(i,n) printf("%.25f\n",x[i]);
   }

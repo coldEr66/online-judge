@@ -1,15 +1,15 @@
 #include<iostream>            
-#include<iomanip>            
-#include<cstdio>            
-#include<cstring>            
-#include<string>            
-#include<set>            
-#include<map>            
-#include<vector>            
-#include<algorithm>            
-#include<sstream>           
-#include <queue>       
-#include<cmath>      
+#include<iomanip>
+#include<cstdio>
+#include<cstring>
+#include<string>
+#include<set>
+#include<map>
+#include<vector>
+#include<algorithm>
+#include<sstream>
+#include<queue>
+#include<cmath>
 using namespace std;
 typedef long long ll;
 typedef double lf;
@@ -76,4 +76,3 @@ int main(){
 		cout<<n<<endl;
 	}
 }
-

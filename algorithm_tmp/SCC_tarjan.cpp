@@ -59,6 +59,7 @@ const ll INF=(ll)1e18;
 vector<ll> g[MAXn];
 ll low[MAXn],vis[MAXn],t;
 vector<ll> v;
+int cnt;
 bool chk[MAXn];
 ll scc[MAXn];
 void dfs(ll cur){
@@ -79,7 +80,7 @@ void dfs(ll cur){
   }
 }
 void tarjan(){
-  REP(i,n)if(!vis[i]) dfs(i,i);
+  REP(i,n)if(!vis[i]) dfs(i,i),cnt++;
 }
 int main(){
   IOS();
@@ -90,7 +91,7 @@ int main(){
     cin>>a>>b;
     a--,b--;
     g[a].pb(b);
-    g[b].pb(a);
   }
   tarjan();
+  cout<<cnt<<endl;
 }

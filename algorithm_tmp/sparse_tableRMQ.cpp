@@ -71,7 +71,7 @@ int main(){
   REP1(i,n) cin>>d[i];
   REP1(i,n) T[i][0]=d[i];
   ll k=__lg(n);
-  REP1(j,k)for(int i=n;i>=0;i--){
+  REP1(j,k)for(int i=n;i>=1;i--){
     if(i+(1<<(j-1))<=n) T[i][j]=min(T[i][j-1],T[i+(1<<(j-1))][j-1]);
   }
   ll q;

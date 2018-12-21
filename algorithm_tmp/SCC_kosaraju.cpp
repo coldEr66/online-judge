@@ -86,4 +86,5 @@ int main(){
   ll cnt = 0;
   reverse(ALL(topo));
   REP(i,n)if(!vis[topo[i]]) dfs2(topo[i],cnt++);
+  cout<<cnt<<endl;
 }

@@ -1,12 +1,10 @@
 #include <queue>
-#include <utility>
 #include <bitset>
-//#include "lib1168.h"
+#include "lib1168.h"
 using namespace std;
-typedef pair<int,int> ii;
 
-priority_queue<ii> mxpq;
-priority_queue<ii,vector<ii>,greater<ii>> mnpq;
+priority_queue<pair<int,int>> mxpq;
+priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> mnpq;
 bitset<1000005> ok;
 int cnt;
 void pop_big(){

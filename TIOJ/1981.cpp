@@ -56,42 +56,60 @@ const ll MAXn=1e6+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
-ll n,m;
-vector<ll> g1[MAXn],g2[MAXn];
-ll vis[MAXn];
-ll scc[MAXn];
-vector<ll> topo;
-void dfs1(ll cur){
+int n,m;
+vector<int> g1[MAXn],g2[MAXn],tr[MAXn];
+bool vis[MAXn];
+int scc[MAXn];
+vector<int> topo;
+int ct[MAXn],dp[MAXn];
+int ans;
+void dfs1(int cur){
   vis[cur] = 1;
-  for(ll it:g1[cur]){
-    if(!vis[it])dfs1(it);
+  for( int it:g1[cur] ){
+    if( !vis[it] ) dfs1(it);
   }
-  topo.eb(cur);
+  topo.pb(cur);
 }
-void dfs2(ll cur,ll cnt){
-  vis[cur] = 1;
+void dfs2(int cur,int cnt){
+  vis[cur]=1;
+  ct[cur]=cnt;
   scc[cnt]++;
-  debug(cnt,cur);
-  for(ll it:g2[cur]){
-    if(!vis[it]) dfs2(it,cnt);
+  // debug(cnt,cur);
+  for( int it:g2[cur] ){
+    if( !vis[it] ) dfs2(it,cnt);
+  }
+}
+void dfsdp(int cur){
+  dp[cur]=scc[cur];
+  for( int i:tr[cur] ){
+    if( dp[i]==-1 ) dfsdp(i);
+    dp[cur]=max(dp[cur],dp[i]+scc[cur]);
   }
 }
 int main(){
   IOS();
   cin>>n>>m;
   REP(i,m){
-    ll a,b;
+    int a,b;
     cin>>a>>b;
-    g1[a].eb(b);
-    g2[b].eb(a);
+    g1[a].pb(b);
+    g2[b].pb(a);
   }
-  REP(i,n)if(!vis[i]) dfs1(i);
+  REP(i,n)if( !vis[i] ) dfs1(i);
+  // debug(topo);
   RST(vis,0);
-  ll cnt = 0;
+  int cnt = 0;
   for(int i=n-1;i>=0;i--){
-    if(!vis[topo[i]]) dfs2(topo[i],cnt++);
+    if( !vis[topo[i]] ) dfs2(topo[i],cnt++);
   }
-  ll ans = 0;
-  REP(i,cnt) chkmax(ans,scc[i]);
+  // pary(scc,scc+cnt);
+  REP(i,n){
+    for( int it:g1[i] )if( ct[i]!=ct[it] ){
+      tr[ct[i]].pb(ct[it]);
+    }
+  }
+  RST(dp,-1);
+  REP(i,cnt)if( dp[i]==-1 ) dfsdp(i);
+  REP(i,cnt) ans=max(ans,dp[i]);
   cout<<ans<<endl;
 }

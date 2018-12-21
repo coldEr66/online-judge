@@ -66,8 +66,21 @@ ll fpow(ll a,ll b){
   }
   return ret;
 }
+void exgcd(ll a,ll b,ll &x,ll &y){
+  if(!b) x = 1, y = 0;
+  else{
+    exgcd(b,a%b,y,x);
+    y -= (a/b)*x;
+  }
+}
+ll sol(ll a,ll b){
+  ll x,y;
+  exgcd(a,b,x,y);
+  return (b+x)%b;
+}
 ll inv(ll x){
-  ll ret = fpow(x,MOD-2);
+  // ll ret = fpow(x,MOD-2);
+  ll ret = sol(x,MOD);
   return ret;
 }
 int main(){
