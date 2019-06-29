@@ -106,7 +106,8 @@ ll qr(ll l,ll r){
 int main(){
   IOS();
   cin >> n >> q;
-  h = sizeof(int)*8-__builtin_clz(n);
+  // h = sizeof(int)*8-__builtin_clz(n);
+  h = __lg(n);
   REP (i,n) cin >> t[i+n];
   build();
 

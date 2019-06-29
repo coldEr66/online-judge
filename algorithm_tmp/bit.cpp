@@ -13,77 +13,20 @@ typedef pair<ll,ll> ii;
 #define S second
 #define pb push_back
 #define pob pop_back
-#ifdef cold66
-#define debug(...) do{\
-    fprintf(stderr,"%s - %d (%s) = ",__PRETTY_FUNCTION__,__LINE__,#__VA_ARGS__);\
-    _do(__VA_ARGS__);\
-}while(0)
-template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
-template<typename T,typename ...S> void _do(T &&_x,S &&..._t){cerr<<_x<<" ,";_do(_t...);}
-template<typename _a,typename _b> ostream& operator << (ostream &_s,const pair<_a,_b> &_p){return _s<<"("<<_p.F<<","<<_p.S<<")";}
-template<typename It> ostream& _OUTC(ostream &_s,It _ita,It _itb)
-{
-    _s<<"{";
-    for(It _it=_ita;_it!=_itb;_it++)
-    {
-        _s<<(_it==_ita?"":",")<<*_it;
-    }
-    _s<<"}";
-    return _s;
-}
-template<typename _a> ostream &operator << (ostream &_s,vector<_a> &_c){return _OUTC(_s,ALL(_c));}
-template<typename _a> ostream &operator << (ostream &_s,set<_a> &_c){return _OUTC(_s,ALL(_c));}
-template<typename _a,typename _b> ostream &operator << (ostream &_s,map<_a,_b> &_c){return _OUTC(_s,ALL(_c));}
-template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
-#define IOS()
-#else
-#define debug(...)
-#define pary(...)
-#define endl '\n'
-#define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
-#endif // cold66
-//}
 
-template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
-template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
-template<class T> using MaxHeap = priority_queue<T>;
-template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
-
-const ll MAXn=1e6+5,MAXlg=__lg(MAXn)+2;
-const ll MOD=1000000007;
-const ll INF=(ll)1e18;
-
-//單點加值，區間詢問和
-ll d[MAXn],bit[MAXn];
-ll n,q;
-ll lowbit(ll x){return x&(-x);}
-void ins(ll pos,ll v){
-  ll j=pos;
-  while(j<=n){
-    bit[j]+=v;
-    j+=lowbit(j);
+struct BIT{
+  ll _n,bit[MAXn];
+  BIT(ll n):_n(n){};
+  ll lowbit(ll x){return x&(-x);}
+  void ins(ll pos,ll val){
+    for (;pos<=_n;pos+=lowbit(pos)) bit[pos] += val;
   }
-}
-ll qr(ll x){
-  ll sum=0;
-  while(x>0){
-    sum+=bit[x];
-    x-=lowbit(x);
+  ll qr(ll pos){
+    ll ret = 0;
+    for (;pos>0;pos-=lowbit(pos)) ret += bit[pos];
+    return ret;
   }
-  return sum;
-}
-int main(){
-  IOS();
-  cin>>n>>q;
-  REP1(i,n){
-    cin>>d[i];
-    ins(i,d[i]);
+  void build(ll *x){
+    REP1 (i,_n) ins(i,x[i]);
   }
-  pary(bit+1,bit+n+1);
-  while(q--){
-    ll cmd,l,r;
-    cin>>cmd>>l>>r;
-    if(cmd==0) ins(l,r);
-    else cout<<qr(r)-qr(l-1)<<endl;
-  }
-}
+};

@@ -70,5 +70,5 @@ void build(){
 int main(){
   IOS();
   build();
-  pary(euler,euler+100);
+  debug(euler[21*14*21]);
 }

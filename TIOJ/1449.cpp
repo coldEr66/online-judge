@@ -50,17 +50,46 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e3+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
-const ll INF=0x3f3f3f3f;
+const ll INF=0x3f3f3f3f3f3f3f3f;
 
-int d[MAXn],dp[MAXn][MAXn],dis[MAXn][MAXn];
+ll dp[MAXn][MAXn],pre[MAXn][MAXn];
+ll d[MAXn];
+ll s[MAXn][MAXn];
 int main(){
   IOS();
-  int n,k;
-  while( cin>>n>>k ){
-    d[0]=0;
-    REP1(i,n) cin>>d[i];
-    REP()
+  ll n,k;
+  cin >> n >> k;
+
+  for (ll i=2;i<=n;i++) cin >> d[i];
+  sort(d+1,d+n+1);
+  REP1 (i,n) pre[i][i] = 0;
+  REP1 (i,n) for (ll j=i+1;j<=n;j++) {
+    pre[i][j] = pre[i][j-1] + d[j] - d[(i+j)/2];
   }
+  REP1 (i,n) for (ll j=i;j<=n;j++) debug(i,j,pre[i][j]);
+  REP1 (i,n) {
+    dp[i][1] = pre[1][i];
+    s[i][1] = i;
+    s[i][i+1] = i;
+    debug(s[i][i+1],i);
+    debug(dp[i][1],i);
+  }
+  for (ll i=2;i<=n;i++) {
+    for (ll j=i;j>=2;j--) {
+      ll ret = INF, id = 0;
+      debug(i,j,s[i-1][j],s[i][j+1]);
+      for (ll u=s[i-1][j];u<=s[i][j+1];u++) {
+        if (ret > dp[u][j-1] + pre[u+1][i]) {
+          ret = dp[u][j-1] + pre[u+1][i];
+          id = u;
+        }
+      }
+      debug(ret,id);
+      s[i][j] = id;
+      dp[i][j] = ret;
+    }
+  }
+  cout << dp[n][k] << endl;
 }

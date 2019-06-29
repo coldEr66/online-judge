@@ -55,20 +55,29 @@ const ll INF=0x3f3f3f3f3f3f3f3f;
 
 vector<ll> e[MAXn];
 ll vis[MAXn];
+bitset<MAXn> ok;
+void gogo(ll x){
+  ok[x] = true;
+  for (auto i:e[x]) {
+    if (ok[i]) continue;
+    gogo(i);
+  }
+}
 ll dfs(ll x,ll c){
   vis[x] = c;
-  ll ret = 1 + (c == 1);
+  ll ret = 1 + (c&1);
   for (auto i:e[x]) {
     if (vis[i] == c) return -INF;
-    else if (vis[i]) continue;
+    else if (c&1 && vis[i] == c-1) continue;
+    else if (c%2==0 && vis[i] == c+1) continue;
     else {
-      if (c == 2) {
-        ll tmp = dfs(i,1);
+      if (c&1) {
+        ll tmp = dfs(i,c-1);
         if (tmp <= 0) return -INF;
         ret = (ret*tmp)%MOD;
       }
       else {
-        ll tmp = dfs(i,2);
+        ll tmp = dfs(i,c+1);
         if (tmp <= 0) return -INF;
         ret = (ret*tmp)%MOD;
       }
@@ -84,32 +93,39 @@ int main(){
     ll n,m;
     cin >> n >> m;
     REP (i,n) e[i].clear();
+    ok.reset();
+    REP (i,n) vis[i] = -1;
     REP (i,m) {
       ll u,v;
-       cin >> u >> v;
-       u--,v--;
-       e[u].eb(v);
-       e[v].eb(u);
+      cin >> u >> v;
+      u--,v--;
+      e[u].eb(v);
+      e[v].eb(u);
+    }
+
+    vector<ll> graph;
+    REP (i,n) if (!ok[i]) {
+      graph.eb(i);
+      gogo(i);
     }
 
     ll ans = 1;
-    REP (j,n) {
-      RST(vis,0);
-      REP1 (i,2) {
-        if (vis[j]) continue;
-        ll ct = dfs(j,i);
-        debug(ct);
-        if (ct >= 0) {
-          if (i == 1) ans[i] = (ans[i]*ct)%MOD;
-          else ans[i] = (ans[i]*ct)%MOD;
-        }
-        else {
-          ans[i] = 0;
+    ll cur = 0;
+    for (auto st:graph) {
+      ll ct = 0;
+      REP (i,2) {
+        ll tmp = dfs(st,cur+i);
+        if (tmp <= 0) {
+          ct = 0;
           break;
         }
+        ct += tmp;
+        cur += 2;
       }
+      ans = (ans*ct)%MOD;
+      if (!ans) break;
     }
 
-
+    cout << ans << endl;
   }
 }

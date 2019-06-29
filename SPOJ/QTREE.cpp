@@ -91,6 +91,7 @@ int QQ(int u,int v){
       swap(x,y);
       swap(u,v);
     }
+    debug(u,v,x,y);
     chkmax(ret,qr(dfn[x],dfn[u]+1));
     debug(ret);
     u=fa[x];

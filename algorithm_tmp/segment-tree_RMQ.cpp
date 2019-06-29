@@ -88,20 +88,22 @@ void build(ll x,ll l,ll r){
 int main(){
   IOS();
   ll t,n;
-  cin>>t>>n;
+  cin>>n>>t;
   REP(i,n) cin>>d[i];
   REP(i,4*MAXn) seg[i].mn=INF;
   build(0,0,n);
   while(t--){
     //REP(i,4*n) debug(seg[i].l,seg[i].r,seg[i].mn);
-    ll u,x,y;
+    // ll u,x,y;
+    char u;
+    ll x,y;
     cin>>u>>x>>y;
-    if(u==1){
+    if(u=='Q'){
       ll ans=qr(x,y+1,0);
       cout<<ans<<endl;
     }
     else{
-      d[x]=y;
+      // d[x]=y;
       ins(x,y,0);
     }
   }
