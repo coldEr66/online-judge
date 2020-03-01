@@ -56,5 +56,26 @@ const ll INF=0x3f3f3f3f;
 
 int main(){
     IOS();
-
+    ll q;
+    cin >> q;
+    while (q--) {
+        ll k,n,a,b;
+        cin >> k >> n >> a >> b;
+        if ((k-1)/b < n) {
+            cout << -1 << endl;
+            continue;
+        }
+        ll l=0,r=min(n,(k-1)/b)+1;
+        if (l == r) {
+            cout << l << endl;
+            continue;
+        }
+        debug(l,r);
+        while (l != r-1) {
+            ll mid = (l+r)>>1;
+            if (a*mid + b*(n-mid) < k) l = mid;
+            else r = mid;
+        }
+        cout << l << endl;
+    }
 }

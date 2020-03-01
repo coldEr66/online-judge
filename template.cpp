@@ -2,10 +2,11 @@
 using namespace std;
 typedef long long ll;
 typedef double lf;
-typedef pair<ll,ll> ii;
-typedef pair<ii,ll> iii;
+typedef pair<int,int> ii;
+typedef pair<ii,int> iii;
 #define REP(i,n) for(int i=0;i<n;i++)
-#define REP1(i,n) for(ll i=1;i<=n;i++)
+#define REP1(i,n) for(int i=1;i<=n;i++)
+#define RREP(i,n) for (int i=n-1;i>=0;i--)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()

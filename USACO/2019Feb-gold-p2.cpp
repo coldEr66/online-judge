@@ -2,9 +2,11 @@
 using namespace std;
 typedef long long ll;
 typedef double lf;
-typedef pair<ll,ll> ii;
+typedef pair<int,int> ii;
+typedef pair<ii,int> iii;
 #define REP(i,n) for(int i=0;i<n;i++)
-#define REP1(i,n) for(ll i=1;i<=n;i++)
+#define REP1(i,n) for(int i=1;i<=n;i++)
+#define RREP(i,n) for (int i=n-1;i>=0;i--)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
@@ -53,86 +55,32 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
-int d[MAXn];
-bool chk(int x){
-  vector<ll> tmp,rk;
-  REP (i,x) {
-    tmp.eb(d[i]);
-    rk.eb(d[i]);
-  }
-  sort(ALL(rk));
-  REP (i,x) tmp[i] = lower_bound(ALL(rk),tmp[i])-rk.begin();
-  debug(tmp);
-
-  vector<vector<ll> > stk;
-  ll it = 0,tg = 0;
-  while (tg < x) {
-    if (tg == x) return true;
-    // debug(it,tg);
-    if (it == x) {
-      REP (i,SZ(stk)) {
-        debug(tg);
-        if (tg == x) return true;
-        if (!SZ(stk[i])) continue;
-        while (SZ(stk[i])) {
-          ll tp = stk[i].back();
-          if (tp != tg) return false;
-          else {
-            stk[i].pob();
-            tg++;
-          }
-          if (tg == x) return true;
-        }
-        if (tg == x) return true;
-      }
-      if (tg == x) return true;
-      return false;
-    }
-    if (tmp[it] == tg) {
-      it++,tg++;
-      continue;
-    }
-    if (SZ(stk)) {
-      bool ok = false;
-      REP (i,SZ(stk)) {
-        if (!SZ(stk[i])) continue;
-        if (stk[i].back() == tg) {
-          stk[i].pob();
-          tg++;
-          ok = true;
-        }
-      }
-      if (ok) continue;
-    }
-    bool fg = false;
-    REP (i,SZ(stk)) {
-      if (SZ(stk[i]) && stk[i].back() > tmp[it]) {
-        stk[i].eb(tmp[it++]);
-        fg = true;
-      }
-    }
-    if (!fg) {
-      vector<ll> tp;
-      tp.eb(tmp[it++]);
-      stk.eb(tp);
-    }
-  }
-  return false;
+void setIO(string pname){
+    IOS();
+    freopen((pname+".in").c_str(),"r",stdin);
+    freopen((pname+".out").c_str(),"w",stdout);
 }
+int bot[MAXn];
+vector<int> stk[MAXn];
 int main(){
-  IOS();
-  // freopen("dishes.in","r",stdin);
-  // freopen("dishes.out","w",stdout);
-  int n;
-  cin >> n;
-  REP (i,n) cin >> d[i];
-
-  int l=1,r=n+1;
-  while (l != r-1){
-    debug(l,r);
-    int mid = (l+r)>>1;
-    if (chk(mid)) l = mid;
-    else r = mid;
-  }
-  cout << l << endl;
+    setIO("dishes");
+    int n;
+    cin >> n;
+    int cur = 0;
+    int ans = n;
+    REP (i,n) {
+        int x;
+        cin >> x;
+        if (cur > x) {
+            ans = i;
+            break;
+        }
+        for (int j=x;j && !bot[j];j--) bot[j] = x;
+        while (SZ(stk[bot[x]]) && stk[bot[x]].back() < x) {
+            cur = stk[bot[x]].back();
+            stk[bot[x]].pob();
+        }
+        stk[bot[x]].eb(x);
+    }
+    cout << ans << endl;
 }
