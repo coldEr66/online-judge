@@ -2,11 +2,9 @@
 using namespace std;
 typedef long long ll;
 typedef double lf;
-typedef pair<int,int> ii;
-typedef pair<ii,int> iii;
+typedef pair<ll,ll> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
-#define REP1(i,n) for(int i=1;i<=n;i++)
-#define RREP(i,n) for (int i=n-1;i>=0;i--)
+#define REP1(i,n) for(ll i=1;i<=n;i++)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
@@ -51,11 +49,40 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
-const int MOD=1000000007;
+const ll MAXn=3e3+5,MAXlg=__lg(MAXn)+2;
+const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+ll dp[MAXn][MAXn];
+ll mul(ll a,ll b){
+    return a*b%MOD;
+}
+ll add(ll a,ll b){
+    ll ret = a + b;
+    if (ret >= MOD) ret -= MOD;
+    return ret;
+}
+ll sub(ll a,ll b){
+    ll ret = a-b;
+    if (ret < 0) ret += MOD;
+    return ret;
+}
 int main(){
-    ll x = 1e18;
-    debug(x += x >> 31 & MOD);
+    IOS();
+    int n,m;
+    cin >> n >> m;
+    REP (i,n+1) {
+        REP (j,m+1) {
+            if (!i || !j) dp[i][j] = 1;
+            else {
+                dp[i][j] = dp[i][j-1];
+                dp[i][j] = add(dp[i][j],mul(4,mul(i,dp[i-1][j-1])));
+                if (i >= 2) dp[i][j] = add(dp[i][j],mul((i-1)*i/2,dp[i-2][j-1]));
+                if (j >= 2) dp[i][j] = add(dp[i][j],mul(i*(j-1),dp[i-1][j-2]));
+            }
+            debug(i,j,dp[i][j]);
+        }
+    }
+    dp[n][m] = sub(dp[n][m],1);
+    cout << dp[n][m] << endl;
 }

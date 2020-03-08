@@ -55,11 +55,63 @@ const ll MAXn=2e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
-ll p[MAXn],a[MAXn],pos[MAXn];
+ll p[MAXn],a[MAXn];
+int pos[MAXn];
 ll sum[MAXn];
+ll seg[MAXn*4],tg[MAXn*4];
+void pull(int id){
+    seg[id] = min(seg[id*2+1] + tg[id*2+1],seg[id*2+2] + tg[id*2+2]);
+}
+void push(int id){
+    if (!tg[id]) return;
+    seg[id] += tg[id];
+    tg[id*2+1] += tg[id];
+    tg[id*2+2] += tg[id];
+    tg[id] = 0;
+}
+void build(int id,int l,int r){
+    if (l == r-1) {
+        seg[id] = sum[l];
+        return;
+    }
+    int mid = (l+r)>>1;
+    build(id*2+1,l,mid);
+    build(id*2+2,mid,r);
+    pull(id);
+}
+void ins(int id,int L,int R,int l,int r,ll v){
+    if (l >= r) return;
+    if (L == l && R == r) {
+        if (l == 0 && r == 0)debug(tg[id]);
+        tg[id] += v;
+        return;
+    }
+    push(id);
+    int mid = (L+R)>>1;
+    if (r <= mid) ins(id*2+1,L,mid,l,r,v);
+    else if (l >= mid) ins(id*2+2,mid,R,l,r,v);
+    else {
+        ins(id*2+1,L,mid,l,mid,v);
+        ins(id*2+2,mid,R,mid,r,v);
+    }
+    pull(id);
+}
+ll qr(int id,int L,int R,int l,int r){
+    if (l >= r) return INF;
+    if (L == l && R == r) {
+        return seg[id] + tg[id];
+    }
+    push(id);
+    int mid = (L+R)>>1;
+    if (r <= mid) return qr(id*2+1,L,mid,l,r);
+    else if (l >= mid) return qr(id*2+2,mid,R,l,r);
+    else {
+        return min(qr(id*2+1,L,mid,l,mid),qr(id*2+2,mid,R,mid,r));
+    }
+}
 int main(){
     IOS();
-    ll n;
+    int n;
     cin >> n;
     REP (i,n) {
         cin >> p[i];
@@ -71,22 +123,13 @@ int main(){
         else sum[i] = a[i];
     }
 
-    ll lst = -1;
+    build(0,0,n);
     ll ans = min(a[0],a[n-1]);
-    ll cur = 0;
-    REP1 (i,n) {
-        lst = max(lst,pos[i]);
-        cur += a[pos[i]];
-        if (lst == n-1) break;
-        ans = min(ans,sum[pos[lst]] - cur);
-    }
-    lst = n;
-    cur = 0;
-    for (ll i=n;i>0;i--) {
-        lst = min(lst,pos[i]);
-        cur += a[pos[i]];
-        if (lst == 0) break;
-        ans = min(ans,sum[n-1]-sum[pos[lst]-1] - cur);
+    REP1 (i,n-1) {
+        int cur = pos[i];
+        ins(0,0,n,0,cur,a[cur]);
+        ins(0,0,n,cur,n,-a[cur]);
+        ans = min(ans,qr(0,0,n,0,n-1));
     }
     cout << ans << endl;
 }

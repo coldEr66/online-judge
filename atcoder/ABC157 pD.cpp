@@ -52,10 +52,56 @@ template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
-const int MOD=1000000007;
+const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+vector<int> e[MAXn];
+vector<ii> edg;
+int vis[MAXn];
+int sz[MAXn],d[MAXn],nei[MAXn];
+int idx;
+void dfs(int x){
+    debug(x);
+    vis[x] = idx;
+    sz[idx]++;
+    for (auto i:e[x]) {
+        if (!vis[i]) dfs(i);
+    }
+}
 int main(){
-    ll x = 1e18;
-    debug(x += x >> 31 & MOD);
+    IOS();
+    int n,m,k;
+    cin >> n >> m >> k;
+    REP (i,m) {
+        int u,v;
+        cin >> u >> v;
+        u--, v--;
+        e[u].eb(v);
+        e[v].eb(u);
+        nei[u]++, nei[v]++;
+    }
+    REP (i,k) {
+        int u,v;
+        cin >> u >> v;
+        u--, v--;
+        edg.eb(u,v);
+    }
+    REP (i,n) {
+        if (!vis[i]) {
+            idx++;
+            dfs(i);
+        }
+    }
+    REP (i,SZ(edg)) {
+        if (vis[edg[i].X] == vis[edg[i].Y]) {
+            d[edg[i].X]++, d[edg[i].Y]++;
+        }
+    }
+    pary(sz+1,sz+idx+1);
+    pary(nei,nei+n);
+    pary(d,d+n);
+    pary(vis,vis+n);
+    REP (i,n) {
+        cout << sz[vis[i]] - nei[i] - 1 - d[i] << " \n"[i==n-1];
+    }
 }

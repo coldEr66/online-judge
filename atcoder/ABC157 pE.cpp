@@ -52,10 +52,45 @@ template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
-const int MOD=1000000007;
+const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+set<int> st[31];
 int main(){
-    ll x = 1e18;
-    debug(x += x >> 31 & MOD);
+    IOS();
+    int n;
+    cin >> n;
+    string s;
+    cin >> s;
+    REP (i,n) {
+        int cur = s[i] - 'a';
+        st[cur].insert(i);
+    }
+
+    int q;
+    cin >> q;
+    while (q--) {
+        int cmd;
+        cin >> cmd;
+        if (cmd == 1) {
+            int x;
+            char c;
+            cin >> x >> c;
+            x--;
+            st[s[x]-'a'].erase(x);
+            s[x] = c;
+            st[c-'a'].insert(x);
+        }
+        else {
+            int l,r;
+            cin >> l >> r;
+            l--, r--;
+            int cnt = 0;
+            REP (i,26) {
+                auto it = st[i].lower_bound(l);
+                if (it != st[i].end() && *it <= r) cnt++;
+            }
+            cout << cnt << endl;
+        }
+    }
 }

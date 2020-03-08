@@ -51,11 +51,49 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
-const int MOD=1000000007;
-const ll INF=0x3f3f3f3f;
+const ll MAXn=(1<<17),MAXlg=__lg(MAXn)+2;
+const ll MOD=1000000007;
+const ll INF=1<<28;
 
+int dp[MAXn][4];
+int ok[MAXn*2];
 int main(){
-    ll x = 1e18;
-    debug(x += x >> 31 & MOD);
+    IOS();
+    int n,K;
+    cin >> n >> K;
+    REP (i,K) {
+        int x;
+        cin >> x;
+        x--;
+        ok[x + (1<<n)] = 1;
+    }
+    REP (i,MAXn) REP (j,4) {
+        dp[i][j] = -1;
+    }
+    for (int i=(1<<n)-1;i >= (1<<(n-1));i--) {
+        int cur = ok[i<<1] + ok[i<<1|1];
+        debug(cur);
+        if (cur == 2) {
+            dp[i][3] = 1;
+        }
+        else if (cur == 1) {
+            dp[i][1] = dp[i][2] = 1;
+        }
+        else {
+            dp[i][0] = 0;
+        }
+    }
+    for (int i=(1<<n)-1;i>=(1<<(n-1));i--) debug(i,dp[i][0],dp[i][1],dp[i][2],dp[i][3]);
+    for (int i=(1<<(n-1))-1;i;i--) {
+        REP (j,4) REP (k,4) {
+            if (dp[i<<1][j] != -1 && dp[i<<1|1][k] != -1) {
+                dp[i][(j|k)] = max(dp[i][(j|k)],dp[i<<1][j] + dp[i<<1|1][k] + ((j|k)&1) + ((j|k)&2));
+            }
+        }
+        debug(i);
+        pary(dp[i],dp[i]+4);
+    }
+    int ans = 0;
+    REP1 (i,3) ans = max(ans,dp[1][i]+1);
+    cout << ans << endl;
 }

@@ -51,11 +51,61 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
-const int MOD=1000000007;
+const ll MAXn=3e5+5,MAXlg=__lg(MAXn)+2;
+const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+vector<int> e[MAXn];
+ii dp[MAXn];
+int d[MAXn];
+int ans;
+void upd(int x,int val){
+    if (dp[x].X < val) {
+        swap(dp[x].X,dp[x].Y);
+        dp[x].X = val;
+    }
+    else if (dp[x].Y < val) dp[x].Y = val;
+}
+void dfs(int x,int p){
+    for (auto i:e[x]) {
+        if (i == p) continue;
+        dfs(i,x);
+        upd(x,dp[i].X);
+    }
+    debug(x,dp[x]);
+    ans = max(ans,dp[x].X + d[x] + 2);
+    ans = max(ans,dp[x].X + dp[x].Y + 2 + d[x]);
+    if (dp[x].X == -INF) dp[x].X = d[x];
+    else {
+        dp[x].X += d[x];
+        dp[x].Y += d[x];
+    }
+    debug(x,ans);
+}
 int main(){
-    ll x = 1e18;
-    debug(x += x >> 31 & MOD);
+    IOS();
+    int q;
+    cin >> q;
+    while (q--) {
+        int n;
+        cin >> n;
+        REP (i,n) {
+            e[i].clear();
+            dp[i] = ii(-INF,-INF);
+            d[i] = 0;
+        }
+        REP (i,n-1) {
+            int u,v;
+            cin >> u >> v;
+            u--, v--;
+            e[u].eb(v);
+            e[v].eb(u);
+        }
+        REP (i,n) {
+            d[i] = SZ(e[i])-1;
+        }
+        ans = 0;
+        dfs(0,0);
+        cout << ans << endl;
+    }
 }

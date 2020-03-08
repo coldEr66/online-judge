@@ -2,11 +2,9 @@
 using namespace std;
 typedef long long ll;
 typedef double lf;
-typedef pair<int,int> ii;
-typedef pair<ii,int> iii;
+typedef pair<ll,ll> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
 #define REP1(i,n) for(int i=1;i<=n;i++)
-#define RREP(i,n) for (int i=n-1;i>=0;i--)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
@@ -52,10 +50,74 @@ template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
-const int MOD=1000000007;
+const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+int l[MAXn][MAXlg],r[MAXn][MAXlg];
+int d[MAXn];
 int main(){
-    ll x = 1e18;
-    debug(x += x >> 31 & MOD);
+    IOS();
+    int n,k,q;
+    cin >> n >> k >> q;
+    REP (i,n) cin >> d[i];
+    vector<int> stk;
+    REP (i,n) {
+        if (!i) {
+            l[i][0] = 0;
+            stk.eb(0);
+        }
+        else {
+            while (SZ(stk) && d[stk.back()] < d[i]) stk.pob();
+            if (!SZ(stk)) l[i][0] = 0;
+            else l[i][0] = stk.back();
+            stk.eb(i);
+        }
+    }
+    vector<int>().swap(stk);
+    for (int i=n-1;i>=0;i--) {
+        if (i == n-1) {
+            r[i][0] = n-1;
+            stk.eb(n-1);
+        }
+        else {
+            while (SZ(stk) && d[stk.back()] < d[i]) stk.pob();
+            if (!SZ(stk)) r[i][0] = n-1;
+            else r[i][0] = stk.back();
+            stk.eb(i);
+        }
+    }
+    REP1 (j,MAXlg-1) {
+        REP (i,n) {
+            l[i][j] = min(l[l[i][j-1]][j-1],l[r[i][j-1]][j-1]);
+            r[i][j] = max(r[l[i][j-1]][j-1],r[r[i][j-1]][j-1]);
+        }
+    }
+    while (q--) {
+        int x,y;
+        cin >> x >> y;
+        x--, y--;
+        if (x > y) swap(x,y);
+        int L = x, R = x;
+        int ans = 0;
+        for (int i=MAXlg-1;i>=0;i--) {
+            int tl = min(l[L][i],l[R][i]);
+            int tr = max(r[L][i],r[R][i]);
+            if (tr < y) {
+                L = tl, R = tr;
+                ans += (1<<i);
+            }
+        }
+        x = R;
+        L = R = y;
+        for (int i=MAXlg-1;i>=0;i--) {
+            int tl = min(l[L][i],l[R][i]);
+            int tr = max(r[L][i],r[R][i]);
+            if (tl > x) {
+                L = tl, R = tr;
+                ans += (1<<i);
+            }
+        }
+        debug(x,L,R);
+        cout << ans << endl;
+    }
 }

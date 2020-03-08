@@ -51,11 +51,51 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
-const int MOD=1000000007;
+const ll MAXn=2e5+5,MAXlg=__lg(MAXn)+2;
+const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+vector<int> ans;
+ii d[MAXn];
+int val[MAXn];
+vector<ii> e[MAXn];
+bool vis[MAXn];
+int dfs(int x){
+    vis[x] = true;
+    int ret = val[x];
+    for (auto i:e[x]) {
+        int to = i.X, id = i.Y;
+        if (!vis[to]) {
+            int tmp = dfs(to);
+            if (tmp) ans.eb(id);
+            ret ^= tmp;
+        }
+    }
+    return ret;
+}
 int main(){
-    ll x = 1e18;
-    debug(x += x >> 31 & MOD);
+    IOS();
+    int n,m;
+    cin >> n >> m;
+    REP (i,n) cin >> d[i].X >> d[i].Y;
+    sort(d,d+n);
+    val[0] = d[0].Y;
+    REP1 (i,n-1) val[i] = d[i].Y^d[i-1].Y;
+    val[n] = d[n-1].Y;
+    REP (i,m) {
+        int l,r;
+        cin >> l >> r;
+        l = int(lower_bound(d,d+n,ii(l,0))-d);
+        r = int(upper_bound(d,d+n,ii(r,1))-d);
+        e[l].eb(r,i);
+        e[r].eb(l,i);
+    }
+    REP (i,n) {
+        if (!vis[i]) {
+            if (dfs(i)) return cout << -1 << endl,0;
+        }
+    }
+    sort(ALL(ans));
+    cout << SZ(ans) << endl;
+    REP (i,SZ(ans)) cout << ans[i] + 1 << " \n"[i==SZ(ans)-1];
 }

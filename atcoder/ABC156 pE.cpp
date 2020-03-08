@@ -51,11 +51,47 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
-const int MOD=1000000007;
+const ll MAXn=4e5+5,MAXlg=__lg(MAXn)+2;
+const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+ll add(ll a,ll b){
+    ll ret = a+b;
+    if (ret >= MOD) ret -= MOD;
+    return ret;
+}
+ll mul(ll a,ll b){
+    return a*b%MOD;
+}
+ll fpow(ll a,ll b){
+    ll ret = 1;
+    while (b) {
+        if (b&1) ret = mul(ret,a);
+        a = mul(a,a);
+        b >>= 1;
+    }
+    return ret;
+}
+ll fac[MAXn],inv[MAXn];
+ll H(ll a,ll b){
+    ll ret = mul(fac[a+b-1],inv[b]);
+    ret = mul(ret,inv[a-1]);
+    return ret;
+}
 int main(){
-    ll x = 1e18;
-    debug(x += x >> 31 & MOD);
+    IOS();
+    ll n,k;
+    cin >> n >> k;
+    fac[0] = 1, inv[0] = 1;
+    REP1 (i,MAXn-1) {
+        fac[i] = mul(fac[i-1],i);
+        inv[i] = fpow(fac[i],MOD-2);
+    }
+    ll ans = 0;
+    REP (i,min(n,k+1)) {
+        ll cur = H(n-i,n-(n-i));
+        cur = mul(cur,H(n-i+1,i));
+        ans = add(ans,cur);
+    }
+    cout << ans << endl;
 }
