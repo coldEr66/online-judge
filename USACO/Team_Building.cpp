@@ -45,11 +45,46 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
 template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
-const ll MOD=1000000007;
+const ll MAXn=1e3+5,MAXlg=__lg(MAXn)+2;
+const ll MOD=1000000009;
 const ll INF=0x3f3f3f3f;
 
-int main(){
+void setIO(string pname){
     IOS();
-
+    freopen((pname+".in").c_str(),"r",stdin);
+    freopen((pname+".out").c_str(),"w",stdout);
+}
+ll dp[MAXn][MAXn][2];
+ll a[MAXn],b[MAXn];
+ll add(ll x,ll y){
+    ll ret = x + y;
+    if (ret >= MOD) ret -= MOD;
+    return ret;
+}
+ll sub(ll x,ll y){
+    ll ret = x-y;
+    if (ret < 0) ret += MOD;
+    return ret;
+}
+int main(){
+    setIO("team");
+    int n,m,k;
+    cin >> n >> m >> k;
+    REP1 (i,n) cin >> a[i];
+    REP1 (i,m) cin >> b[i];
+    sort(a+1,a+n+1);
+    sort(b+1,b+m+1);
+    REP (i,n+1) REP (j,m+1) dp[i][j][0] = 1;
+    int roll = 0;
+    REP1 (u,k) {
+        REP (i,n+1) REP (j,m+1) {
+            if (a[i] > b[j] && i >= u && j >= u) dp[i][j][roll^1] = dp[i-1][j-1][roll];
+            else dp[i][j][roll^1] = 0;
+            if (i) dp[i][j][roll^1] = add(dp[i][j][roll^1],dp[i-1][j][roll^1]);
+            if (j) dp[i][j][roll^1] = add(dp[i][j][roll^1],dp[i][j-1][roll^1]);
+            if (i && j) dp[i][j][roll^1] = sub(dp[i][j][roll^1],dp[i-1][j-1][roll^1]);
+        }
+        roll ^= 1;
+    }
+    cout << dp[n][m][roll] << endl;
 }

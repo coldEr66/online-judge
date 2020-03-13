@@ -2,19 +2,23 @@
 using namespace std;
 typedef long long ll;
 typedef double lf;
-typedef pair<int,int> ii;
-typedef pair<ii,int> iii;
-#define REP(i,n) for(int i=0;i<n;i++)
-#define REP1(i,n) for(int i=1;i<=n;i++)
+typedef pair<ll,ll> ii;
+typedef pair<ii,ll> iii;
+#define REP(i,n) for(ll i=0;i<n;i++)
+#define REP1(i,n) for(ll i=1;i<=n;i++)
+#define RREP(i,n) for (ll i=n-1;i>=0;i--)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
 #define X first
 #define Y second
+#define mkp make_pair
+#define pb push_back
 #define eb emplace_back
+#define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
-    fprintf(stderr,"LINE %d: (%s) = ",__LINE__,#__VA_ARGS__);\
+    fprintf(stderr,"%s - %d (%s) = ",__PRETTY_FUNCTION__,__LINE__,#__VA_ARGS__);\
     _do(__VA_ARGS__);\
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
@@ -44,12 +48,49 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 //}
 template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
 template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
+template<class T> using MaxHeap = priority_queue<T>;
+template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
+const ll c = 100000;
 
-int main(){
+void setIO(string pname){
     IOS();
-
+    freopen((pname+".in").c_str(),"r",stdin);
+    freopen((pname+".out").c_str(),"w",stdout);
+}
+ii operator - (const ii &a,const ii &b){return ii(a.X-b.X,a.Y-b.Y);}
+ll operator ^ (const ii &a,const ii &b){return a.X*b.Y - a.Y*b.X;}
+bool ok[MAXn];
+ii dp[MAXn];
+int main(){
+    setIO("balance");
+    ll n;
+    cin >> n;
+    dp[0] = ii(0,0);
+    dp[n+1] = ii(n+1,0);
+    REP1 (i,n) {
+        dp[i].X = i;
+        cin >> dp[i].Y;
+    }
+    vector<ii> hull(n+5);
+    ll idx = 0;
+    REP (i,n+2) {
+        while (idx > 1 && ((hull[idx-1] - hull[idx-2]) ^ (dp[i] - hull[idx-2])) > 0) {
+            idx--;
+        }
+        hull[idx++] = dp[i];
+    }
+    hull.resize(idx);
+    REP (i,SZ(hull)) hull[i].Y *= c;
+    debug(hull);
+    REP (i,SZ(hull)-1) {
+        ll l = hull[i].X, r = hull[i+1].X;
+        for (ll j=l;j<=r;j++) dp[j].Y = (hull[i].Y * (r-j) + hull[i+1].Y * (j-l)) / (r-l);
+    }
+    REP1 (i,n) {
+        cout << dp[i].Y << endl;
+    }
 }

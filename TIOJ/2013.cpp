@@ -59,13 +59,17 @@ const ll INF=0x3f3f3f3f;
 struct node{
     int pri,sz;
     node *lc,*rc,*par;
-    node(int _pri):pri(_pri),sz(1),lc(0),rc(0),par(0){};
-    void up(){
+    void init(int _pri) {
+        pri = _pri;
         sz = 1;
-        if (lc) sz += lc->sz;
-        if (rc) sz += rc->sz;
+        lc = rc = par = 0;
     }
-};
+} mem[MAXn*2];
+
+node *newnode(){
+    static int top = 0;
+    return &mem[top++];
+}
 inline int gtsz(node *x){
     return x ?x->sz:0;
 }
@@ -75,12 +79,12 @@ node *mrg(node *a,node *b){
     if (a->pri > b->pri) {
         a->rc = mrg(a->rc,b);
         if (a->rc) a->rc->par = a;
-        a->up();
+        a->sz = gtsz(a->lc) + gtsz(a->rc) + 1;
         return a;
     }
     b->lc = mrg(a,b->lc);
     if (b->lc) b->lc->par = b;
-    b->up();
+    b->sz = gtsz(b->lc) + gtsz(b->rc) + 1;
     return b;
 }
 void split(node *a,node *&b,node *&c,int k){
@@ -90,13 +94,13 @@ void split(node *a,node *&b,node *&c,int k){
             c = a;
             split(a->lc,b,c->lc,k);
             if (c->lc) c->lc->par = c;
-            c->up();
+            c->sz = gtsz(c->lc) + gtsz(c->rc) + 1;
         }
         else {
             b = a;
             split(a->rc,b->rc,c,k-gtsz(a->lc)-1);
             if (b->rc) b->rc->par = b;
-            b->up();
+            b->sz = gtsz(b->lc) + gtsz(b->rc) + 1;
         }
     }
 }
@@ -119,11 +123,13 @@ void dsu_mrg(int a,int b){
 }
 
 void init(int N){
-    srand(clock());
+    srand(880301);
     REP (i,N) {
         dsu[i] = i;
-        in[i] = new node(rand());
-        out[i] = new node(rand());
+        in[i] = newnode();
+        in[i]->init(rand());
+        out[i] = newnode();
+        out[i]->init(rand());
         rt[i] = mrg(in[i],out[i]);
     }
 }

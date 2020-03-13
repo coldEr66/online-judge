@@ -18,7 +18,7 @@ typedef pair<ii,int> iii;
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
-    fprintf(stderr,"%s - %d (%s) = ",__PRETTY_FUNCTION__,__LINE__,#__VA_ARGS__);\
+    fprintf(stderr,"LINE %d: (%s) = ",__PRETTY_FUNCTION__,__LINE__,#__VA_ARGS__);\
     _do(__VA_ARGS__);\
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}

@@ -18,7 +18,7 @@ typedef pair<ii,int> iii;
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
-    fprintf(stderr,"%s - %d (%s) = ",__PRETTY_FUNCTION__,__LINE__,#__VA_ARGS__);\
+    fprintf(stderr,"LINE: %d (%s) = ",__LINE__,#__VA_ARGS__);\
     _do(__VA_ARGS__);\
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
@@ -51,11 +51,16 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
-const int MOD=1000000007;
-const ll INF=0x3f3f3f3f;
+const ll MAXn=1e4+5,MAXlg=__lg(MAXn)+2;
+const ll MOD=1000000007;
+const int INF=0x3f3f3f3f;
 
+int id[MAXn];
 int main(){
-    ll x = 1e18;
-    debug(x += x >> 31 & MOD);
+    srand(clock());
+    int n;
+    cin >> n;
+    REP1 (i,n) id[i] = i;
+    random_shuffle(id+1,id+n+1);
+    REP1 (i,n) cout << id[i]+14 << endl;
 }

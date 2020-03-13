@@ -2,19 +2,21 @@
 using namespace std;
 typedef long long ll;
 typedef double lf;
-typedef pair<int,int> ii;
-typedef pair<ii,int> iii;
+typedef pair<ll,ll> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
-#define REP1(i,n) for(int i=1;i<=n;i++)
+#define REP1(i,n) for(ll i=1;i<=n;i++)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
 #define X first
 #define Y second
+#define mkp make_pair
+#define pb push_back
 #define eb emplace_back
+#define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
-    fprintf(stderr,"LINE %d: (%s) = ",__LINE__,#__VA_ARGS__);\
+    fprintf(stderr,"%s - %d (%s) = ",__PRETTY_FUNCTION__,__LINE__,#__VA_ARGS__);\
     _do(__VA_ARGS__);\
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
@@ -44,12 +46,39 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 //}
 template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
 template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
+template<class T> using MaxHeap = priority_queue<T>;
+template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=3e3+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+string str[MAXn];
+ll cnto[MAXn][MAXn];
+ll cnti[MAXn][MAXn];
 int main(){
     IOS();
+    int n,m;
+    cin >> n >> m;
+    REP (i,n) cin >> str[i];
 
+    REP (i,n) REP (j,m) {
+        cnto[i][j] += (str[i][j] == 'O') + (j ?cnto[i][j-1]:0);
+        debug(i,j,cnto[i][j]);
+    }
+    REP (j,m) REP (i,n) {
+        cnti[j][i] += (str[i][j] == 'I') + (i ?cnti[j][i-1]:0);
+        debug(i,j,cnti[j][i]);
+    }
+
+    ll ans = 0;
+    REP (i,n) REP (j,m) {
+        if (str[i][j] == 'J') {
+            ll tco = cnto[i][m-1] - (j ?cnto[i][j-1]:0);
+            ll tci = cnti[j][n-1] - (i ?cnti[j][i-1]:0);
+            debug(i,j,tco,tci);
+            ans += tco * tci;
+        }
+    }
+    cout << ans << endl;
 }

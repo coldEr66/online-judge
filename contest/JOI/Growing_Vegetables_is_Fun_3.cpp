@@ -2,19 +2,21 @@
 using namespace std;
 typedef long long ll;
 typedef double lf;
-typedef pair<int,int> ii;
-typedef pair<ii,int> iii;
+typedef pair<ll,ll> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
-#define REP1(i,n) for(int i=1;i<=n;i++)
+#define REP1(i,n) for(ll i=1;i<=n;i++)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
 #define X first
 #define Y second
+#define mkp make_pair
+#define pb push_back
 #define eb emplace_back
+#define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
-    fprintf(stderr,"LINE %d: (%s) = ",__LINE__,#__VA_ARGS__);\
+    fprintf(stderr,"%d (%s) = ",__LINE__,#__VA_ARGS__);\
     _do(__VA_ARGS__);\
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
@@ -44,12 +46,55 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 //}
 template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
 template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
+template<class T> using MaxHeap = priority_queue<T>;
+template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=4e2+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+int R,G,Y;
+int rg[MAXn],ry[MAXn];
+int gr[MAXn],gy[MAXn];
+int yr[MAXn],yg[MAXn];
+int dp[MAXn][MAXn][MAXn][3];
 int main(){
     IOS();
-
+    int n;
+    cin >> n;
+    string s;
+    cin >> s;
+    REP (i,n) {
+        if (s[i] == 'R') {
+            rg[R] = G;
+            ry[R++] = Y;
+        }
+        else if (s[i] == 'G') {
+            gr[G] = R;
+            gy[G++] = Y;
+        }
+        else {
+            yr[Y] = R;
+            yg[Y++] = G;
+        }
+    }
+    debug(R,G,Y);
+    RST(dp,INF);
+    REP (i,3) dp[0][0][0][i] = 0;
+    REP (i,R+1) REP (j,G+1) REP (k,Y+1) REP (l,3) {
+        int ret = dp[i][j][k][l];
+        if (i < R && l != 0) {
+            dp[i+1][j][k][0] = min(dp[i+1][j][k][0],ret + max(rg[i]-j,0) + max(ry[i]-k,0));
+        }
+        if (j < G && l != 1) {
+            dp[i][j+1][k][1] = min(dp[i][j+1][k][1],ret + max(gr[j]-i,0) + max(gy[j]-k,0));
+        }
+        if (k < Y && l != 2) {
+            dp[i][j][k+1][2] = min(dp[i][j][k+1][2],ret + max(yr[k]-i,0) + max(yg[k]-j,0));
+        }
+    }
+    int ans = INF;
+    REP (i,3) ans = min(ans,dp[R][G][Y][i]);
+    if (ans == INF) cout << -1 << endl;
+    else cout << ans << endl;
 }

@@ -6,15 +6,19 @@ typedef pair<int,int> ii;
 typedef pair<ii,int> iii;
 #define REP(i,n) for(int i=0;i<n;i++)
 #define REP1(i,n) for(int i=1;i<=n;i++)
+#define RREP(i,n) for (int i=n-1;i>=0;i--)
 #define RST(i,n) memset(i,n,sizeof i)
-#define SZ(a) (int)a.size()
+#define SZ(a) (ll)a.size()
 #define ALL(a) a.begin(),a.end()
 #define X first
 #define Y second
+#define mkp make_pair
+#define pb push_back
 #define eb emplace_back
+#define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
-    fprintf(stderr,"LINE %d: (%s) = ",__LINE__,#__VA_ARGS__);\
+    fprintf(stderr,"%s - %d (%s) = ",__PRETTY_FUNCTION__,__LINE__,#__VA_ARGS__);\
     _do(__VA_ARGS__);\
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
@@ -44,12 +48,45 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 //}
 template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
 template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
+template<class T> using MaxHeap = priority_queue<T>;
+template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=3e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
-int main(){
+void setIO(string pname){
     IOS();
+    freopen((pname+".in").c_str(),"r",stdin);
+    freopen((pname+".out").c_str(),"w",stdout);
+}
+int dp[MAXn];
+int sum[MAXn];
+multiset<int> st;
+multiset<int> dps[MAXn];
+int main(){
+    setIO("redistricting");
+    int n,k;
+    cin >> n >> k;
+    string s;
+    cin >> s;
+    REP1 (i,n) {
+        sum[i] = (s[i-1] == 'H' ?1:-1);
+        sum[i] += sum[i-1];
+    }
+    st.insert(0);
+    dps[0].insert(0);
+    REP1 (i,n) {
+        int cur = *(st.begin());
+        if (*(dps[cur].begin()) < sum[i]) dp[i] = cur;
+        else dp[i] = cur+1;
 
+        st.insert(dp[i]);
+        dps[dp[i]].insert(sum[i]);
+        if (i >= k) {
+            st.erase(st.find(dp[i-k]));
+            dps[dp[i-k]].erase(dps[dp[i-k]].find(sum[i-k]));
+        }
+    }
+    cout << dp[n] << endl;
 }
