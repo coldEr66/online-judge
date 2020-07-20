@@ -72,7 +72,7 @@ int main(){
 
   int ans = 0;
   while (1) {
-    if (clock() - t > 2.85 * CLOCKS_PER_SEC) return cout << ans << endl,0;
+    if (clock() - t > 1.87 * CLOCKS_PER_SEC) return cout << ans << endl,0;
     random_shuffle(id,id+n);
     vis.reset();
     int tmp = 1;

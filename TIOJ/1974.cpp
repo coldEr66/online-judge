@@ -99,14 +99,6 @@ struct lines{
         return w > a.w;
     }
 } d[MAXn];
-// ll qr(ll id,ll l,ll r){
-//     if (seg[id].l == l && seg[id].r == r) return gt(id);
-//     push(id);
-//     ll mid = (l+r)>>1;
-//     if (r <= mid) return qr(id*2+1,l,r);
-//     else if (l >= mid) return qr(id*2+2,l,r);
-//     return max(qr(id*2+1,l,mid),qr(id*2+2,mid,r));
-// }
 vector<ll> rk;
 int main(){
     IOS();

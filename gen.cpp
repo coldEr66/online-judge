@@ -56,17 +56,9 @@ const ll INF=0x3f3f3f3f;
 
 int main(){
     IOS();
-    srand(clock());
-    ll t = 100;
-    cout << t << endl;
-    while (t--) {
-        ll n = 1000;
-        // while (n < 2) n = rand()%30;
-        ll z = rand()%n;
-        if (z == 0) z = n;
-        cout << n << ' ' << z << endl;
-        ll x = rand()%100;
-        if (x == 0) x = 100;
-        REP (i,n) cout << x << " \n"[i==n-1];
+    int n = 300000;
+    cout << n << endl;
+    REP (i,n-1) {
+        cout << i+1 << ' ' << i+2 << endl;
     }
 }

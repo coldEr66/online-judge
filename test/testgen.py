@@ -2,12 +2,12 @@
 from random import randint
 
 
-n = 5
-q = 1000
+n = 20
 print(n)
-print(q)
+p = 5
+print(p)
+arr = []
+s = ""
 for i in range(0,n):
-    print(randint(0,50),randint(0,50))
-
-for i in range(0,q):
-    print(randint(0,50),randint(0,50),randint(0,100))
+    s += chr(randint(0,9) + ord('0'))
+print(s)

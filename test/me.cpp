@@ -14,7 +14,7 @@ typedef pair<ii,int> iii;
 #define eb emplace_back
 #ifdef cold66
 #define debug(...) do{\
-    fprintf(stderr,"LIND %d: (%s) = ",__LINE__,#__VA_ARGS__);\
+    fprintf(stderr,"LINE %d: (%s) = ",__LINE__,#__VA_ARGS__);\
     _do(__VA_ARGS__);\
 }while(0)
 template<typename T>void _do(T &&_x){cerr<<_x<<endl;}
@@ -49,91 +49,48 @@ const ll MAXn=2e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
-struct query{
-    int x,y,z,id;
-} tmpdt[MAXn];
-bool cmp(const query &a,const query &b){
-    if (a.x != b.x) return a.x > b.x;
-    if (a.y != b.y) return a.y > b.y;
-    if (a.z != b.z) return a.z < b.z;
-    return a.id < b.id;
-}
-vector<query> dt;
-int ans[MAXn],bit[MAXn];
-vector<int> rk;
-int lowbit(int x){return x&(-x);}
-void ins(int x,int v){
-    for (;x>0;x-=lowbit(x)) bit[x] += v;
-}
-int qr(int x){
-    int ret = 0;
-    for (;x<MAXn;x+=lowbit(x)) ret += bit[x];
+
+ll n,p;
+ll cnt[10005];
+ll dp[MAXn];
+ll ten;
+ll fpow(ll a,ll b){
+    ll ret = 1;
+    while (b) {
+        if (b&1) ret = ret * a % p;
+        a = a * a % p;
+        b >>= 1;
+    }
     return ret;
-}
-int GTPOS(int x){
-    return int(lower_bound(ALL(rk),x) - rk.begin() + 1);
-}
-void CDQ(int l,int r){
-    // debug(l,r);
-    if (l == r-1) return;
-    int mid = (l+r)>>1;
-    CDQ(l,mid), CDQ(mid,r);
-    int tl = l, tr = mid;
-    int idx = 0;
-    vector<int> op;
-    while (tl < mid && tr < r) {
-        if (dt[tl].y >= dt[tr].y) {
-            if (dt[tl].id == -1) {
-                ins(dt[tl].z,1);
-                op.eb(dt[tl].z);
-            }
-            tmpdt[idx++] = dt[tl++];
-        }
-        else {
-            if (dt[tr].id != -1) {
-                ans[dt[tr].id] += qr(dt[tr].z);
-            }
-            tmpdt[idx++] = dt[tr++];
-        }
-    }
-    while (tl < mid) {
-        tmpdt[idx++] = dt[tl++];
-    }
-    while (tr < r) {
-        if (dt[tr].id != -1){
-            ans[dt[tr].id] += qr(dt[tr].z);
-        }
-        tmpdt[idx++] = dt[tr++];
-    }
-    for (int i=l;i<r;i++) {
-        dt[i] = tmpdt[i-l];
-    }
-    for (auto i:op) ins(i,-1);
 }
 int main(){
     IOS();
-    int n,q;
-    cin >> n >> q;
-    REP (i,n) {
-        int s,t;
-        cin >> s >> t;
-        rk.eb(s+t);
-        query tmp = (query){s,t,s+t,-1};
-        dt.eb(tmp);
+    cin >> n >> p;
+    string s;
+    cin >> s;
+    if (p == 2 || p == 5) {
+        ll ans = 0;
+        REP (i,n) {
+            if (s[i] % p == 0) ans += (i+1);
+        }
+        cout << ans << endl;
     }
-    REP (i,q) {
-        int x,y,z;
-        cin >> x >> y >> z;
-        rk.eb(z);
-        query tmp = (query){x,y,z,i};
-        dt.eb(tmp);
+    else {
+        ten = fpow(10,p-2);
+        dp[0] = (s[0]-'0') % p;
+        ll cur = 1;
+        cnt[dp[0] * cur % p] = 1;
+        ll ans = 0;
+        if (dp[0] == 0) ans++;
+        cur = cur * ten % p;
+        REP1 (i,n-1) {
+            dp[i] = ((dp[i-1]*10%p) + (s[i]-'0')%p) % p;
+            if (dp[i] == 0) ans++;
+            ll nxt = dp[i] * cur % p;
+            ans += cnt[nxt];
+            cnt[nxt]++;
+            cur = cur * ten % p;
+        }
+        cout << ans << endl;
     }
-    sort(ALL(rk));
-    rk.resize(unique(ALL(rk))-rk.begin());
-    sort(ALL(dt),cmp);
-    REP (i,SZ(dt)) {
-        dt[i].z = GTPOS(dt[i].z);
-    }
-    CDQ(0,SZ(dt));
-    REP (i,q) cout << ans[i] << endl;
 }

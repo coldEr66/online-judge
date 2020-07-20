@@ -4,7 +4,7 @@ typedef long long ll;
 typedef double lf;
 typedef pair<ll,ll> ii;
 #define REP(i,n) for(int i=0;i<n;i++)
-#define REP1(i,n) for(ll i=1;i<=n;i++)
+#define REP1(i,n) for(int i=1;i<=n;i++)
 #define FOR(i,j,n,m) for(int i=j;i<n;i+=m)
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
@@ -12,6 +12,7 @@ typedef pair<ll,ll> ii;
 #define F first
 #define S second
 #define pb push_back
+#define eb emplace_back
 #define pob pop_back
 #ifdef cold66
 #define debug(...) do{\
@@ -53,34 +54,29 @@ const ll MAXn=5e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=(ll)1e18;
 
-ll z[MAXn];
-ll n;
+int z[MAXn];
+int n;
 string s;
-void build(){
+list<int> ls;
+list<int>::iterator it[MAXn];
+vector<int> box[MAXn];
+int main(){
+  IOS();
+  cin>>s;
+  n = SZ(s);
   z[0]=0;
-  ll l=0,r=0;
+  int l=0,r=0;
   REP1(i,n-1){
-    z[i]=max(0LL,min(z[i-l],r-i+1));
+    z[i]=max(0,min(z[i-l],r-i+1));
     while(i+z[i]<n && s[z[i]]==s[i+z[i]]){
       l=i,r=i+z[i];
       z[i]++;
     }
   }
-}
-list<ll> ls;
-list<ll>::iterator it[MAXn];
-vector<ll> box[MAXn];
-int main(){
-  IOS();
-  cin>>s;
-  n = SZ(s);
-  build();
-  pary(z,z+n);
-  debug(*prev(ls.begin()));
-  REP1(i,n-1) box[z[i]].pb(i);
+  REP1(i,n-1) box[z[i]].eb(i);
   REP(i,n+1) it[i] = ls.insert(ls.end(),i);
-  ll ans = 1;
-  ll idx=0;
+  int ans=1;
+  int idx=0;
   REP1(i,n){
     while(!SZ(box[idx])) idx++;
     while(idx < i){
