@@ -23,32 +23,11 @@ template<typename T,typename ...S> void _do(T &&_x,S && ..._t){cerr << _x << ", 
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif
 
-const ll MAXn=1e3+5;
+const ll MAXn=100005;
 const ll INF=0x3f3f3f3f3f3f3f3f;
 
-ll dp[MAXn][MAXn];
-ll c[MAXn][MAXn];
-ll s[MAXn][MAXn];
-ll cal(ll l,ll r){
-    if (l > r) return 0;
-    if (dp[l][r] != -INF) return dp[l][r];
-    ll ret = c[l][r] + cal(l+1,r-1);
-    for (ll i=l;i<r;i++) {
-        ret = max(ret,cal(l,i) + cal(i+1,r));
-    }
-    return dp[l][r] = ret;
-}
+
 int main(){
     IOS();
-    ll n;
-    cin >> n;
-    REP (i,MAXn) REP (j,MAXn) dp[i][j] = -INF;
-    REP1 (i,n) REP1 (j,n) {
-        cin >> c[i][j];
-        if (i >= j) dp[i][j] = 0;
-    }
 
-
-
-    cout << cal(1,n) << endl;
 }
