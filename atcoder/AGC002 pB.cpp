@@ -52,29 +52,24 @@ const ll INF=0x3f3f3f3f;
 bool ok[MAXn];
 int cnt[MAXn];
 int main(){
-    IOS();
-    int n,m;
-    cin >> n >> m;
-    ok[0] = true;
-    REP (i,n) {
-        if (i) cnt[i] = 1;
-    }
-    REP (i,m) {
-        int a,b;
-        cin >> a >> b;
-        a--, b--;
-        if (ok[a]) {
-            ok[b] = true;
-            if (cnt[a] == 0) ok[a] = false;
-            else cnt[a]--;
-        }
-        else {
-            cnt[a]--;
-            cnt[b]++;
-        }
-    }
-
-    int ans = 0;
-    REP (i,n) ans += (int)ok[i];
-    cout << ans << endl;
+    	IOS();
+    	int n,m;
+    	cin >> n >> m;
+    	ok[0] = true;
+    	REP (i,n) {
+        	cnt[i] = 1;
+    	}
+	REP (i,m) {
+		int a,b;
+		cin >> a >> b;
+		a--, b--;
+		if (ok[a]) ok[b] = true;
+		cnt[a]--, cnt[b]++;
+		if (cnt[a] == 0) ok[a] = false;
+	}
+	int ans = 0;
+	REP (i,n) {
+		ans += (int)ok[i];
+	}
+	cout << ans << endl;
 }
