@@ -51,5 +51,21 @@ const ll INF=0x3f3f3f3f;
 
 int main(){
     IOS();
-    
+    int n;
+    cin >> n;
+    ll ans = 0;
+    ll cur = 0;
+    for (int i=0;i<n;++i) {
+        ll x;
+        cin >> x;
+        if (x == 0) {
+            ans += cur/2;
+            cur = 0;
+        }
+        else {
+            cur += x;
+        }
+    }
+    ans += cur/2;
+    cout << ans << endl;
 }

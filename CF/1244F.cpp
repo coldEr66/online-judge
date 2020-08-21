@@ -45,11 +45,44 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
 template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=2e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+bool ok[MAXn];
 int main(){
     IOS();
-    
+    int n,k;
+    cin >> n >> k;
+    k %= 2;
+    string s;
+    cin >> s;
+    for (int i=0;i<n;++i) {
+        if (i == 0) {
+            if (s[i] != s[i+1] && s[i] != s[n-1]) {
+                ok[i] = true;
+            }
+        }
+        else if (i == n-1) {
+            if (s[i] != s[i-1] && s[i] != 0) {
+                ok[i] = true;
+            }
+        }
+        else {
+            if (s[i] != s[i-1] && s[i] != s[i+1]) {
+                ok[i] = true;
+            }
+        }
+    }
+    for (int i=0;i<n;++i) {
+        if (!ok[i]) cout << s[i];
+        else {
+            if (k%2 == 0) cout << s[i];
+            else {
+                if (s[i] == 'W') cout << 'B';
+                else cout << 'W';
+            }
+        }
+    }
+    cout << endl;
 }

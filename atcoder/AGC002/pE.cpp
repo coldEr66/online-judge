@@ -49,7 +49,20 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+int d[MAXn];
 int main(){
     IOS();
-    
+    int n;
+    cin >> n;
+    for (int i=0;i<n;++i) {
+        cin >> d[i];
+    }
+    sort(d,d+n,greater<int>());
+    int cur = 0;
+    while (cur+1 < n && cur+1 < d[cur+1]) cur++;
+    debug(cur);
+    int r = cur;
+    while (r < n && d[r] > cur) r++;
+    if (((r-cur)&1) && ((d[cur]-cur)&1)) cout << "Second" << endl;
+    else cout << "First" << endl;
 }

@@ -45,11 +45,67 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
 template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=2e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+ll a[MAXn],b[MAXn];
+vector<int> e[MAXn],ansid;
+ll ans;
+bool vis[MAXn];
+int in[MAXn],pos[MAXn];
 int main(){
     IOS();
+    int n;
+    cin >> n;
+    for (int i=0;i<n;++i) cin >> a[i];
+    for (int i=0;i<n;++i) {
+        cin >> b[i];
+        if (b[i] == -1) continue;
+        b[i]--;
+        e[i].eb(b[i]);
+        in[b[i]]++;
+    }
     
+    queue<int> q;
+    for (int i=0;i<n;++i) {
+        if (!in[i]) q.emplace(i);
+    }
+    vector<int> tmp,tp;
+    while (SZ(q)) {
+        int cur = q.front();
+        q.pop();
+        if (vis[cur]) continue;
+        vis[cur] = true;
+        tp.eb(cur);
+        if (a[cur] > 0) {
+            ans += a[cur];
+            ansid.eb(cur);
+            for (auto i:e[cur]) {
+                a[i] += a[cur];
+                if (!vis[i]) {
+                    in[i]--;
+                    if (!in[i]) q.emplace(i);
+                }
+            }
+        }
+        else {
+            tmp.eb(cur);
+            ans += a[cur];
+            for (auto i:e[cur]) {
+                if (!vis[i]) {
+                    in[i]--;
+                    if (!in[i]) q.emplace(i);
+                }
+            }
+        }
+    }
+    for (int i=0;i<n;++i) pos[tp[i]] = i;
+    sort(ALL(tmp),[&](const int x,const int y){
+        return pos[x] > pos[y];
+    });
+    for (int i=0;i<SZ(tmp);++i) ansid.eb(tmp[i]);
+
+    cout << ans << endl;
+    for (int i=0;i<n;++i) cout << ansid[i]+1 << " \n"[i==n-1];
 }

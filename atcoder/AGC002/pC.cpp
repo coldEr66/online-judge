@@ -49,7 +49,21 @@ const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+int d[MAXn];
 int main(){
     IOS();
-    
+    int n,L;
+    cin >> n >> L;
+    int ans = -1;
+    for (int i=0;i<n;++i) {
+        cin >> d[i];
+    }
+    for (int i=0;i<n-1;++i) {
+        if (d[i] + d[i+1] >= L) ans = i+1;
+    }
+    if (ans == -1) return cout << "Impossible" << endl,0;
+    cout << "Possible" << endl;
+    for (int i=1;i<ans;++i) cout << i << endl;
+    for (int i=n-1;i>ans;--i) cout << i << endl;
+    cout << ans << endl;
 }

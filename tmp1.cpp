@@ -25,9 +25,31 @@ template<typename T,typename ...S> void _do(T &&_x,S && ..._t){cerr << _x << ", 
 
 const ll MAXn=100005;
 const ll INF=0x3f3f3f3f3f3f3f3f;
-
-
+int pw(int x){return x*x;}
+int id[15],p[15];
+vector<int> v;
 int main(){
     IOS();
-
+    for (int i=1;i<=11;i++) {
+        id[i] = i;
+        p[i] = i;
+        v.eb(i);
+    }
+    int ans = 0;
+    vector<int> cur;
+    ll cnt = 0;
+    do {
+        cnt++;
+        int tmp = 0;
+        for (int i=0;i<11;i++) {
+            tmp += pw(abs(i+1-v[i]));
+        }
+        if (ans < tmp) {
+            ans = tmp;
+            cur = v;
+        }
+    }while(next_permutation(ALL(v)));
+    for (int i=0;i<11;i++) cout << cur[i] << " \n"[i==10];
+    cout << ans << endl;
+    cout << cnt << endl;
 }

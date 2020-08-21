@@ -45,11 +45,39 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
 template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=1e6+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
+int sum[2][MAXn];
 int main(){
     IOS();
-    
+    int n;
+    string s;
+    cin >> n >> s;
+    for (int i=1;i<=n;++i) {
+        if (s[i-1] == '?' || s[i-1] == '1') {
+            sum[1][i] = sum[1][i-1] + 1;
+        }
+        if (s[i-1] == '?' || s[i-1] == '0') {
+            sum[0][i] = sum[0][i-1] + 1;
+        }
+        debug(sum[0][i],sum[1][i]);
+    }
+
+    for (int i=1;i<=n;++i) {
+        int cur = i;
+        int ans = 0;
+        while (cur <= n) {
+            int win = max(sum[0][cur],sum[1][cur]);
+            if (win >= i) {
+                ans++;
+                cur += i;
+            }
+            else {
+                cur += (i-win);
+            }
+        }
+        cout << ans << " \n"[i==n];
+    }
 }

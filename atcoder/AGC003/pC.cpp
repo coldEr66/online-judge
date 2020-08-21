@@ -44,12 +44,28 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 //}
 template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
 template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
-
+ 
 const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
-
+ 
+int d[MAXn],bit[MAXn];
+map<int,int> pos;
 int main(){
     IOS();
-    
+    int n;
+    cin >> n;
+    vector<int> a,b;
+    for (int i=0;i<n;++i) {
+        cin >> d[i];
+        pos[d[i]] = i;
+    }
+    sort(d,d+n);
+    int ans = 0;
+    for (int i=0;i<n;++i) {
+        if (i&1) {
+            if (pos[d[i]] % 2 == 0) ans++;
+        }
+    }
+    cout << ans << endl;
 }
