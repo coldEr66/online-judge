@@ -1,11 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
-typedef double lf;
-typedef pair<int,int> ii;
-typedef pair<ii,int> iii;
-#define REP(i,n) for(int i=0;i<n;i++)
-#define REP1(i,n) for(int i=1;i<=n;i++)
+using ll = long long;
+using pii = pair<int,int>;
+using pll = pair<ll,ll>;
 #define RST(i,n) memset(i,n,sizeof i)
 #define SZ(a) (int)a.size()
 #define ALL(a) a.begin(),a.end()
@@ -42,14 +39,12 @@ template<typename _t> void pary(_t _a,_t _b){_OUTC(cerr,_a,_b);cerr<<endl;}
 #define IOS() ios_base::sync_with_stdio(0);cin.tie(0);
 #endif // cold66
 //}
-template<class T> inline bool chkmax(T &a, const T &b) { return b > a ? a = b, true : false; }
-template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, true : false; }
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXN=1e5+5,MAXlg=__lg(MAXN)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
 
 int main(){
     IOS();
-    
+
 }

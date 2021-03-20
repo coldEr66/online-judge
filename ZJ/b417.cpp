@@ -51,20 +51,23 @@ template<class T> inline bool chkmin(T &a, const T &b) { return b < a ? a = b, t
 template<class T> using MaxHeap = priority_queue<T>;
 template<class T> using MinHeap = priority_queue<T, vector<T>, greater<T>>;
 
-const ll MAXn=1e5+5,MAXlg=__lg(MAXn)+2;
+const ll MAXn=5e5+5,MAXlg=__lg(MAXn)+2;
 const ll MOD=1000000007;
 const ll INF=0x3f3f3f3f;
-const int k=330;
+const int k=710;
 
 int n,m,tmp;
 int d[MAXn],cnt[MAXn],t[MAXn];
-ii ans[1000005];
+ii ans[MAXn];
 struct query{
   int l,r,id;
   bool operator < (const query &q)const{
-    return (l/k)<(q.l/k) || ((l/k)==(q.l/k) && r<q.r);
+    if (l/k != q.l/k) return (l/k) < (q.l/k);
+    int tp = l/k;
+    if (tp&1) return r > q.r;
+    return r < q.r;
   }
-} q[1000005];
+} q[MAXn];
 void add(int x){
   t[cnt[x]]--;
   cnt[x]++;
@@ -80,20 +83,20 @@ void sub(int x){
 int main(){
   IOS();
   cin>>n>>m;
-  REP1(i,n) cin>>d[i];
+  REP(i,n) cin>>d[i];
   REP(i,m){
     cin>>q[i].l>>q[i].r;
+    q[i].r--;
     q[i].id = i;
   }
   sort(q,q+m);
   int l=0,r=-1;
   REP(i,m){
-    debug("QAQ");
+    debug(q[i].l,q[i].r);
     while( r<q[i].r ) add(d[++r]);
     while( r>q[i].r ) sub(d[r--]);
     while( l<q[i].l ) sub(d[l++]);
     while( l>q[i].l ) add(d[--l]);
-    debug("alive");
     ans[q[i].id].X = tmp,ans[q[i].id].Y = t[tmp];
   }
   REP(i,m) cout<<ans[i].X<<' '<<ans[i].Y<<endl;
